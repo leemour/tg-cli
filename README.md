@@ -42,8 +42,9 @@ tg bot list --check                      # every bot on this computer
 - **Recipients and a journal.** Each bot has its own list of chats it may write to, and a journal
   of what it did, without the text.
 - **Messages and chats.** Send, edit, delete and pin, to a chat by id or by title, or to a person
-  as `user:<id>`; `--md`, `--html`, a file or a photo. A Telegram bot cannot read a chat's history:
-  `messages list` shows what this bot sent and received on this computer.
+  as `user:<id>`; `--md`, `--html`, a file or a photo. `messages list` shows what this bot sent,
+  received or imported on this computer. `bot store fetch` imports older channel and supergroup
+  messages through a separate MTProto session; private chats and basic groups are unsupported.
 - **Admins, members, buttons, the menu, webhooks.** `bot chats admins`, `bot chats members remove`,
   `bot callbacks answer`, `bot commands`, `bot webhooks` — the same commands `max bot` has.
 - **`bot watch`** prints what happens in the bot's chats as it arrives, and keeps it: that is the
