@@ -7,7 +7,7 @@ ran it · ⛔ not tested offline, with the reason and where it is checked instea
 Measured from the test run (`coverage/argv.jsonl`), not searched for — see
 [TESTING.md](TESTING.md) for how, and for the states and failures that cut across commands.
 
-**2348 ✅ · 60 ⛔ · 0 ❌** — 464 commands, 1944 options.
+**2348 ✅ · 62 ⛔ · 0 ❌** — 464 commands, 1946 options.
 
 | Command | Option | | Note |
 |---|---|---|---|
@@ -640,6 +640,8 @@ Measured from the test run (`coverage/argv.jsonl`), not searched for — see
 | `tasks close` | `--reason` | ✅ |  |
 | `search all` |  | ✅ |  |
 | `search all` | `--only` | ✅ |  |
+| `search all` | `--meetings` | ⛔ | cli-messaging src/cli/messenger/messenger.test.ts searches a stored meeting account through search all |
+| `search all` | `--max-meetings` | ⛔ | cli-messaging src/cli/messenger/messenger.test.ts bounds how many meetings search all looks through |
 | `search all` | `--limit` | ✅ |  |
 | `search all` | `--exact` | ✅ |  |
 | `search all` | `--timezone` | ✅ |  |
