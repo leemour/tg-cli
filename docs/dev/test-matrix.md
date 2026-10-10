@@ -7,7 +7,7 @@ ran it · ⛔ not tested offline, with the reason and where it is checked instea
 Measured from the test run (`coverage/argv.jsonl`), not searched for — see
 [TESTING.md](TESTING.md) for how, and for the states and failures that cut across commands.
 
-**2347 ✅ · 59 ⛔ · 0 ❌** — 463 commands, 1943 options.
+**2348 ✅ · 60 ⛔ · 0 ❌** — 464 commands, 1944 options.
 
 | Command | Option | | Note |
 |---|---|---|---|
@@ -382,6 +382,8 @@ Measured from the test run (`coverage/argv.jsonl`), not searched for — see
 | `store decrypt` | `--output` | ✅ |  |
 | `store repair` |  | ✅ |  |
 | `store repair` | `--dry-run` | ⛔ | cli-messaging src/cli/messenger/store-maintenance.test.ts and src/store/repair.test.ts cover preview rollback and retained data |
+| `store reset` |  | ✅ |  |
+| `store reset` | `--no-backup` | ⛔ | cli-messaging src/cli/messenger/store-maintenance.test.ts resets without a copy and checks backup: null |
 | `store copies delete` |  | ✅ |  |
 | `conversations build` |  | ✅ |  |
 | `conversations build` | `--chat` | ✅ |  |
