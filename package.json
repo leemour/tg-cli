@@ -56,7 +56,8 @@
     "standards:check": "node config/wirecat/check.mjs",
     "docs:lint": "markdownlint-cli2",
     "docs:spell": "cspell lint --config cspell.json --no-progress README.md",
-    "ci:quick": "pnpm typecheck"
+    "ci:quick": "pnpm typecheck",
+    "contracts:check": "cli-contract contracts/plan.json"
   },
   "dependencies": {
     "@mtcute/node": "0.32.3",
@@ -69,17 +70,18 @@
   "devDependencies": {
     "@biomejs/biome": "2.5.15",
     "@cspell/dict-en-gb": "5.0.34",
+    "@cspell/dict-es-es": "3.0.9",
     "@cspell/dict-ru_ru": "2.3.3",
     "@napi-rs/canvas": "1.0.10",
     "@types/node": "^22.20.4",
     "@vitest/coverage-v8": "5.0.2",
+    "@wirecat/cli-testing": "https://github.com/WireCatLabs/cli-testing/releases/download/toolkit-v0.2.0/wirecat-cli-testing-0.2.0.tgz",
     "cspell": "10.3.6",
     "lefthook": "2.1.16",
+    "markdownlint-cli2": "0.23.3",
     "rumdl": "^0.2.78",
     "typescript": "^7.0.2",
     "unpdf": "1.8.1",
-    "vitest": "^5.0.2",
-    "@cspell/dict-es-es": "3.0.9",
-    "markdownlint-cli2": "0.23.3"
+    "vitest": "^5.0.2"
   }
 }

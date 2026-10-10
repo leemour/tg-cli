@@ -101,3 +101,16 @@ Record model/SDK versions, clock/seed, prompts and first failures. Model answers
 rerun; deterministic fixture checks and independent model evaluations are reported separately. What
 a user should check in an agent's statistics answer stays in
 [the user page on scripts](../cli-contract.md#checking-an-agents-answer-about-statistics).
+
+## Offline external contracts
+
+`pnpm contracts:check` drives the built binary and MCP stdio server with isolated synthetic
+profiles. It checks help, clean JSON discovery, structured error exit codes, and reviewed
+tool schemas. Plans and snapshots live in `contracts/`; changes require explicit review with
+`pnpm exec cli-contract contracts/plan.json --update`. It runs in release, monthly, and manual
+full validation; ordinary PR/local checks retain their existing budget. See the
+[shared guide](https://github.com/WireCatLabs/cli-testing/blob/main/docs/ci/CONTRACTS.md).
+
+The development dependency currently pins the validated
+[toolkit preview](https://github.com/WireCatLabs/cli-testing/releases/tag/toolkit-v0.2.0)
+asset and its lockfile integrity while npm trusted publishing is being configured.

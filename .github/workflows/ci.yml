@@ -24,6 +24,7 @@ jobs:
       # The test matrix is rebuilt from this run's argv log, so the diff also catches a stale
       # test-matrix.md; the parity lines read the command tree from the dist/ built above.
       checks: |
+        pnpm contracts:check
         pnpm version:check
         pnpm bot:generate:check
         pnpm exec cli-dev test-matrix --program dist/program.js --untested scripts/test-matrix-untested.ts --name tg --check
