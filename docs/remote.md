@@ -290,8 +290,8 @@ never instructions.
 
 ### Transfer a larger file
 
-One answer carries 512 KiB by default; `--chunk-bytes` allows up to 1 MiB. A file can be up to
-50 MiB. The JSON includes `base64`, `offsetBytes`, `readBytes`, `totalBytes`, `nextOffsetBytes`,
+One answer carries 512 KiB by default; `--chunk-bytes` allows up to 1 MiB. The file default is
+50 MiB, configurable through `MESSAGING_ATTACHMENT_MAX_MIB`. The JSON includes `base64`, `offsetBytes`, `readBytes`, `totalBytes`, `nextOffsetBytes`,
 `complete` and the SHA256 of the whole file. `complete: true` means this answer holds the entire
 file, not that its text has been recognized.
 
@@ -352,9 +352,38 @@ pixels, report the app's limit instead of inventing text.
 
 `pdf.sourceSha256` and `pdf.sourceBytes` describe the original PDF; the top-level `sha256` and
 `totalBytes` describe the page image. `--if-sha256` checks the original PDF. `--page` cannot be
-combined with `--offset-bytes` or `--chunk-bytes`. PDFs can be up to 50 MiB, with no fixed page-count limit; a PNG
-is at most 2000 pixels on each side, and one page image at most 1 MiB.
+combined with `--offset-bytes` or `--chunk-bytes`. By default, PDFs can be up to 50 MiB, with no fixed page-count limit; a PNG
+allows 4000 pixels on each side and 8 MiB per page. All three values are configurable.
 
 A page image calls no external OCR service and indexes no text. After looking at every page, the
 agent calls `attachments text set` and checks a `content:` search. Check numbers and complex
 layouts against the images; quality depends on the source document and the agent's tools.
+
+## Increase file or PDF preview size
+
+Set these environment variables on the computer running Telegram or its MCP server:
+
+| Variable | Default | Budget |
+|---|---|---|
+| `MESSAGING_ATTACHMENT_MAX_MIB` | `50` | File bytes for extraction and retained-attachment transfer |
+| `MESSAGING_PDF_PREVIEW_MAX_PIXELS` | `4000` | PNG page width and height |
+| `MESSAGING_PDF_PREVIEW_MAX_MIB` | `8` | Encoded PNG size per page |
+
+For example, allow 250 MiB files and page images up to 8000 pixels/16 MiB:
+
+```sh
+export MESSAGING_ATTACHMENT_MAX_MIB=250
+export MESSAGING_PDF_PREVIEW_MAX_PIXELS=8000
+export MESSAGING_PDF_PREVIEW_MAX_MIB=16
+```
+
+PowerShell uses `$env:MESSAGING_ATTACHMENT_MAX_MIB = "250"`; use the same syntax for the other names.
+Values must be positive whole numbers. Run `tg mcp config` in that environment again and replace
+the client's server entry; it preserves these settings. Restart a running server after changing them.
+Ordinary transfer still uses chunks up to 1 MiB; that is a separate budget.
+
+Larger work needs more memory and time. Rendering scales a page up to four times its original size
+within the pixel budget; a larger ceiling does not force every page to that width. MCP responses
+account for base64 and metadata, but the app may impose its own limit. For larger CLI JSON, use
+`--max-output-bytes 50000000`; `0` explicitly disables the general output bound. External OCR and
+office-document decompression limits remain separate from the configurable file size.

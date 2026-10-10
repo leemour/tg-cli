@@ -224,7 +224,7 @@ or an incomplete answer. Agent text is not overwritten. Images and scan pages go
 only with an explicit `--ocr`; the provider charges for the calls on its own terms. `--offline` and
 `--ocr` do not go together, and there is no automatic switch from the agent to the API.
 
-A file for extraction can be up to 50 MiB; local text is limited to 2 million characters. API OCR
+The default extraction file budget is 50 MiB, configurable through `MESSAGING_ATTACHMENT_MAX_MIB`; local text is limited to 2 million characters. API OCR
 takes PDFs up to 20 pages and images up to 4 MiB and 20 million pixels (at most 8,000 pixels on
 each side). Files run 1–8 at a time, 4 by default; the pages of one file go one after another. By
 default the API handles up to 100 files; `--limit` takes 1–500. To continue, use the returned
@@ -235,3 +235,23 @@ does not retry. The command returns statuses and links to messages, not the full
 
 Check a phrase from the file and open the returned message. Then use
 [attachment content search](search.md#files-preparation-and-archive-gaps) to find it again.
+
+## Recover a partial file batch
+
+An isolated error keeps completed files and allows independent later files to continue.
+Partial JSON has `complete: false` and `batch`: attempted/succeeded/failed counts, `errorRate`
+(a fraction from 0 to 1), and `failures`. Each failure names its ID/locator and stage, with the attachment position when available,
+and an `error` with code, message and `actions`: wait, retry, check, configure or skip.
+A wait action carries `afterMs` when the provider supplies a delay; a configure action names its setting.
+
+Exit code `0` does not prove every file succeeded: inspect `complete` and `batch.failed`.
+Partial download JSONL appends a `type: "batch_summary"` row. Saved files stay on disk. Repeating
+`messages download --all` retries failed checkpoint IDs and new files while skipping successful
+stretches. For extraction, the cursor continues remaining files; retry failed locators separately.
+Previously good indexed text is preserved when a replacement fails.
+
+After ten attempts, failures above 50% stop new items. `MESSAGING_BATCH_MAX_ERROR_PERCENT` sets
+a whole percentage from 1 to 100. Rate limits or authentication failures stop earlier; concurrent
+requests already in flight may still finish. Honor the provider's wait and resume unfinished work.
+Search partial diagnostic records with `tg runs search --status partial --json` or MCP `tg_read` with `command: "runs search"`
+([diagnostics](diagnostics.md)).

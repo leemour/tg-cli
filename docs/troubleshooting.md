@@ -221,7 +221,7 @@ other commands, or a long `store fetch`. For `store fetch` and `messages downloa
 
 A command waits out a request of up to 10 seconds, twice at most, and says so on stderr: "Telegram
 asks to wait 3 s before … — waiting, then going on". `serve` and `watch` wait up to 2 minutes. A longer
-wait ends the command with this error. `tg` also remembers the wait: until it ends, the same command fails at once without asking Telegram again, and
+wait ends a standalone request with this error; batch history returns a partial result with an actionable `issue`. `tg` also remembers the wait: until it ends, the same command fails at once without asking Telegram again, and
 `tg doctor` and `tg server status` list it under `flood`.
 
 How the pace, the waits and parallel commands fit together: [limits and waits](limits.md).
@@ -426,3 +426,16 @@ it.
 
 ⚠ Never attach the state folder, the session file or `~/.local/share/cli-messaging/` — they hold your
 login and your messages.
+
+## Partial results and recovery actions
+
+CLI and MCP errors include `actions`: what to check, which setting to change, how long to wait
+or which item to skip. `retryable` never authorizes automatic write replay: for `outcome_unknown`,
+verify whether the action happened first. API limits cannot be increased through local settings;
+reduce or split the input instead.
+
+A failed independent file or history page returns partial results with exit code `0`,
+`complete: false` and `batch` or `issue`. Completed downloads and earlier history pages remain
+saved. If a provider wait is too long to finish, single-chat `store fetch` includes `issue.retryAfterMs`
+and a `resume` boundary; multi-chat fetch exposes per-chat issues and downloads use checkpoints; do not repeat requests before the wait ends. Partial background jobs have
+state `partial` and can be retried with `tg store jobs retry`. Check completeness as well as the exit code.

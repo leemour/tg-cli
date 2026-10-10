@@ -66,7 +66,7 @@ unknown command, a check before any work, and commands that never connect (`mode
 as a run named `tg`. The record holds only the command's words, such as `messages list`, never what
 followed them.
 
-A successful run leaves no record unless you ask for one. So a problem report always has a failure to
+A fully successful run leaves no record unless you ask for one; partial runs are retained by default too. So a problem report always has a failure to
 attach. `--no-record`, or `"record": false` in the settings, turns this off too.
 
 Successful searches and statistics queries keep their own history, apart from run records. It has its
@@ -162,3 +162,22 @@ The whole file is in the folder `tg runs path <run-id>` prints.
 
 - [What an error means and what to do](troubleshooting.md)
 - [What reaches the disk at all](security.md)
+
+## Search errors and partial runs
+
+```sh
+tg runs search --error-code rate_limited --json
+tg runs search --status partial --since-time 2026-10-01 --json
+```
+
+`runs search` matches literal diagnostic text in metadata and safe events. Use `--operation`,
+`--profile`, `--since-time`, `--limit` and `--page` to narrow it. Each page allows up to 100 runs and
+each run returns at most 100 matched events, with `eventsTruncated` for additional events.
+A failed batch item or history page creates `status: "partial"` with failed IDs, stages and
+codes; message contents and provider error payloads are not copied into that record. Partial
+records are kept by default unless recording was explicitly disabled. Search does not record itself.
+
+MCP `tg_read` with `command: "runs search"` accepts these `arguments`: `query`, `status`, `error_code`, `operation`, `since_time`, `limit` and `page`.
+It reads only the active profile's diagnostic runs, does not connect to Telegram and does not open
+raw background-job logs. The original partial result contains recovery actions; diagnostic records
+keep only safe identifiers and codes.
