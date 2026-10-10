@@ -428,6 +428,40 @@ describe("messages", () => {
     expect(JSON.parse(detailed.stdout[0] ?? "null").chats[0].messages[0]).toHaveProperty("locator")
   })
 
+  it("contacts timeline reads one person's stored messages within --scope, the time range and --limit", async () => {
+    const said = (id: string) =>
+      message(id, { senderId: "778", senderName: "Bea", timestamp: `2026-09-26T10:0${id}:00.000Z` })
+    const adapter = scripted({
+      history: async () => ({ items: [said("1"), said("2"), said("3")], hasMore: false }),
+    })
+    await tg(["messages", "list", "Valencia"], { adapter: () => adapter })
+
+    const found = await tg(
+      [
+        "contacts",
+        "timeline",
+        "778",
+        "--scope",
+        "personal",
+        "--since-time",
+        "2026-09-26T10:01:30Z",
+        "--until-time",
+        "2026-09-26T10:05:00Z",
+        "--limit",
+        "1",
+        "--json",
+      ],
+      { adapter: () => adapter },
+    )
+
+    expect(found.code, found.stderr.join("")).toBe(0)
+    const timeline = JSON.parse(found.stdout[0] ?? "null")
+    expect(timeline.items.map(({ locator }: { locator: string }) => locator)).toEqual([
+      "msg:telegram/1/-1001234567890/3",
+    ])
+    expect(timeline).toMatchObject({ hasMore: true, items: [{ role: "sender", scope: "personal" }] })
+  })
+
   it("download saves the message's file into --output-dir and answers its path", async () => {
     const into = join(mkdtempSync(join(tmpdir(), "tg-download-")), "out")
     const adapter = scripted({
