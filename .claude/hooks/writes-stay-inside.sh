@@ -1,8 +1,7 @@
 #!/bin/sh
-# Refuses an Edit, Write or NotebookEdit outside the folders agents may change: this project (its
-# worktrees included), cli-messaging and cli-core beside it, the session's scratch folder and this
-# project's memory. Runs in every permission mode, bypass included; the sandbox in settings.json
-# holds shell commands to the same folders.
+# Refuses an Edit, Write or NotebookEdit outside the folders agents may change: every project in
+# ~/Projects/AI, the session's scratch folders and this project's memory. Runs in every permission mode,
+# bypass included; the sandbox in settings.json holds shell commands to the same folders.
 set -eu
 here=$(CDPATH='' cd -- "$(dirname -- "$0")/../.." && pwd)
 main=$(dirname "$(git -C "$here" rev-parse --path-format=absolute --git-common-dir)")
@@ -17,9 +16,7 @@ case "$real" in
     exit 2
     ;;
 esac
-for root in "$main" "$beside/cli-messaging" "$beside/cli-core" "/tmp/claude-$(id -u)"; do
-  case "$real/" in "$root"/*) exit 0 ;; esac
-done
+case "$real/" in "$beside"/* | /tmp/claude-"$(id -u)"/*) exit 0 ;; esac
 case "$real" in "$HOME"/.*/projects/-home-*-tg-cli*/memory/*) exit 0 ;; esac
-echo "refused: $real is outside the folders this project may change — $main, $beside/cli-messaging, $beside/cli-core" >&2
+echo "refused: $real is outside the folders this project may change — $beside" >&2
 exit 2
