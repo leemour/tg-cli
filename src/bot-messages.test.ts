@@ -241,8 +241,8 @@ describe("tg bot messages send", () => {
     ])
   })
 
-  it("**refuses a file from a hidden folder** unless --allow-any-file says it is meant to go", async () => {
-    const dir = join(mkdtempSync(join(tmpdir(), "tg-bot-hidden-")), ".secret")
+  it("**refuses a file from a credential folder** unless --allow-any-file says it is meant to go", async () => {
+    const dir = join(mkdtempSync(join(tmpdir(), "tg-bot-hidden-")), ".ssh")
     mkdirSync(dir)
     writeFileSync(join(dir, "key.txt"), "x")
 

@@ -414,11 +414,11 @@ describe("sending", () => {
     expect(JSON.parse(queued.stdout[0] ?? "").items[0].scheduledFor).toBe("2030-01-01T09:00:00.000Z")
   })
 
-  it("attaches a --photo or a --file, and sends a hidden one only with --allow-any-file", async () => {
+  it("attaches a --photo or a --file, and sends a protected one only with --allow-any-file", async () => {
     const root = mkdtempSync(join(tmpdir(), "tg-upload-"))
     writeFileSync(join(root, "cat.png"), "png")
-    mkdirSync(join(root, ".private"))
-    writeFileSync(join(root, ".private", "notes.txt"), "n")
+    mkdirSync(join(root, ".ssh"))
+    writeFileSync(join(root, ".ssh", "notes.txt"), "n")
     const asked: SendOptions[] = []
     const adapter = () =>
       scripted({
@@ -427,7 +427,7 @@ describe("sending", () => {
           return { message: message("43", { text, outgoing: true }), sendId: options.sendId }
         },
       })
-    const hidden = join(root, ".private", "notes.txt")
+    const hidden = join(root, ".ssh", "notes.txt")
 
     const photo = await tg(["messages", "send", "me", "look", "--photo", join(root, "cat.png")], { adapter })
     const refused = await tg(["messages", "send", "me", "--file", hidden], { adapter })

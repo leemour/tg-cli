@@ -354,8 +354,8 @@ tg review --transcribe
 tg messages list "Book club" --transcribe --model gigaam-v3
 ```
 
-Local transcription requires a complete mono or stereo Ogg Opus recording of at most 10 minutes.
-Split longer recordings first. This limit applies to the local model path.
+Local transcription requires a complete mono or stereo Ogg Opus recording without a fixed
+ten-minute cutoff. Longer recordings need more memory and processing time.
 
 Telegram transcribes for Premium accounts, and a few messages a week on the free trial. Without it,
 a model on this machine does the work, and the recording never leaves the computer. A model is
@@ -653,9 +653,9 @@ tg messages send "Book club" --file 3f9a.pdf --filename "Report Q3.pdf"   # the 
 
 `--photo` takes a `.jpg`, `.png` or `.webp`. A `.mp4` or `.mov` given with `--file` goes as a video
 unless you add `--as-file`. `--voice` takes an Ogg Opus file (`.ogg`, `.oga`, `.opus`) and goes alone:
-no text, no other file. Hidden files and folders, `~/.ssh`, `tg`'s own folders
-and the local store are refused unless you add `--allow-any-file` — that is where keys and tokens
-live.
+no text, no other file. Known credential files and folders, `tg`'s own folders and the local store
+are protected. Ordinary hidden working folders are allowed; CLI `--allow-any-file` overrides
+protected paths when the owner intends to send that file.
 
 `--spoiler` blurs a photo or a video until it is tapped; a document or a voice message cannot take one.
 `--caption-above` shows the text above the photo or file. Telegram lets only bots stop forwarding of one

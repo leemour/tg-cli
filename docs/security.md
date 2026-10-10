@@ -91,8 +91,9 @@ notifies, each deleted message, a new group, and each person added to one. A rea
 quiet pin and marking a chat read do not. A forward is checked against the chat it goes to.
 
 `TG_PROFILE_LOCK` pins the profile where an agent cannot change its own environment. `--file` and
-`--photo` refuse hidden files and folders, `~/.ssh`, `tg`'s own folders and the local store; over
-MCP there is no way around it.
+`--photo` refuse known credential files and folders, `tg`'s own folders and the local store,
+including symlink targets. Ordinary hidden working folders are allowed; MCP cannot override
+these protected locations.
 
 ## Other people's text on your screen
 

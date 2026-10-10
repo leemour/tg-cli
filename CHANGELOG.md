@@ -3,10 +3,15 @@
 Notable changes to `@wirecat/tg-cli` (`@leemour/tg-cli` up to 0.42.0). One section per version, newest first; versions follow
 [semantic versioning](https://semver.org), so before `1.0.0` the command interface may still change.
 
-## Unreleased
+## 0.44.1 — 10.10.2026
 
 ### Fixed
 
+- Local PDF text extraction and page previews accept documents beyond 20 pages; extraction follows command cancellation rather than a separate 30-second cutoff. File and image budgets remain.
+- Local transcription accepts complete mono or stereo Ogg Opus recordings beyond ten minutes. Long recordings need more memory and processing time.
+- Attachments from ordinary hidden working folders are allowed. Known credentials, CLI folders and the message store remain protected.
+- Markdown exports preserve message formatting. MCP write arguments preserve original Unicode while returned text still exposes invisible controls; configured model gateways support normal redirects.
+- Windows update and MCP setup support ordinary relative PATH entries and custom command-processor environments. This patch keeps the existing message-store schema.
 - Search troubleshooting distinguishes archive-only discovery/offline requests from ordinary
   server-backed word search, so an empty local archive does not imply Telegram was searched.
 

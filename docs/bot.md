@@ -136,7 +136,8 @@ tg sales bot messages send "Team" "Weekly report" --file report.pdf
 tg sales bot messages send "Team" --photo screenshot.png
 ```
 
-A file from a hidden folder or from `tg`'s own folders is refused unless you add `--allow-any-file`.
+Known credential files and folders, `tg`'s own folders and the message store are protected.
+Ordinary hidden working folders are allowed; CLI `--allow-any-file` overrides protected paths.
 A bot sends one file per message: a photo up to 10 MB, any other file up to 50 MB
 ([sending files](https://core.telegram.org/bots/api#sending-files)).
 

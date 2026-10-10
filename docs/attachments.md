@@ -87,8 +87,8 @@ agent reads the text. If the picture does not show, ask for MCP `format: base64`
 with the agent's tools. See [reading PDF pages remotely](remote.md#read-pdf-pages-without-a-local-file-handoff)
 for an example and limits.
 
-Retained-file transfer refuses hidden files and folders, the CLI's own folders and the message
-store, including symlink targets. Save the intended attachment in an ordinary downloads folder.
+Retained-file transfer protects known credential files and folders, the CLI's own folders and
+the message store, including symlink targets. Ordinary hidden working folders are allowed.
 
 ## How content is read
 
@@ -123,8 +123,8 @@ Voice messages are handled apart from documents: Telegram can provide a transcri
 available, or `messages transcribe --local` uses a downloaded local model. It does not use
 `models.ocr`; see [voice messages](usage.md#voice-messages).
 
-Local PDF text extraction allows at most 20 pages and stops after 30 seconds. Split larger PDFs
-before extracting their text.
+Local PDF text extraction has no fixed page-count limit or separate 30-second extraction cutoff.
+Caller cancellation and file/text budgets still apply.
 
 ## Dependencies and missing engines
 

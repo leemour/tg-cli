@@ -432,8 +432,9 @@ every exit code. All codes: [docs/commands.md](docs/commands.md#exit-codes).
 - Before each send, from a command or over MCP, `tg` checks the profile's limits and writes a line to
   the journal — without the message's text.
 - A level of `ask` in `permissions` asks you in the terminal before a change; over MCP nobody is
-  there to answer, so it goes ahead — use `readonly` to stop an agent. `--file` refuses keys and hidden files unless you add
-  `--allow-any-file`, and over MCP there is no way around it.
+  there to answer, so it goes ahead — use `readonly` to stop an agent. `--file` protects known credential
+  files, CLI folders and the local store. Ordinary hidden working folders are allowed;
+  `--allow-any-file` is available only in CLI, and MCP cannot override these protections.
 - The limits protect against an agent talked into sending by a message it read, not against one
   that sets out to get round them: against that you need a boundary outside — a sandbox or a
   separate user.

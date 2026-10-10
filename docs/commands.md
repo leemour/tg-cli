@@ -24,6 +24,7 @@ whole shell session; without either, the profile is `default`.
 | `-V, --version` | output the version number. |
 | `-v, --verbose` | more detail in what is shown: -v ids, -vv everything we know. Default: `0`. |
 | `--json` | machine-readable output: one JSON value on stdout, nothing else. |
+| `--agent-json` | JSON for AI agents: invisible controls are visible; ordinary --json preserves text. |
 | `--jsonl` | machine-readable output: one JSON object per line, for streaming and jq. |
 | `--quiet` | diagnostics off; a failure is still said. |
 | `--trace` | the connection's own log lines on stderr — never message content. |
@@ -1257,7 +1258,7 @@ tg messages send <chat> [text] [options]
 | `--photo <file>` | attach a .jpg, .png or .webp as a photo; the text becomes its caption. |
 | `--as-file` | send the --file as a file to download, a video included. |
 | `--voice <file>` | send an Ogg Opus file as a voice message, alone, with no text. |
-| `--allow-any-file` | send a file even from a hidden folder, \~/.ssh or this CLI's own folders. |
+| `--allow-any-file` | send a file even from credential folders or this CLI's own folders. |
 | `--at-time <time>` | let the messenger send it later, even with this machine off: 2026-09-25T09:00 (local time), or 30m, 2h, 1d from now. |
 | `--spoiler` | hide the --photo or video behind a spoiler until tapped. |
 | `--caption-above` | show the text above the --photo or --file, not below it. |
@@ -3814,7 +3815,7 @@ tg mcp [options]
 | `--allow-send` | no longer used — the profile's permissions decide; kept so an old setup still starts. |
 | `--allow-mark-read` | no longer used — the profile's permissions decide. |
 | `--allow-delete` | no longer used — the profile's permissions decide. |
-| `--http` | serve over HTTP on 127.0.0.1 for ChatGPT and Claude in the browser, behind your tunnel. |
+| `--http` | serve over HTTP on 127.0.0.1 for ChatGPT and Claude in the browser, behind your tunnel; the profile's permissions decide. |
 | `--http-confirmation <mode>` | no longer used — writes show no form; the profile's permissions decide. |
 | `--port <port>` | the local port for --http (default 8765). |
 | `--public-url <url>` | the tunnel's https address the browser apps use, e.g. https://<name>.ts.net. |
@@ -4151,7 +4152,7 @@ tg bot messages send <chat> [text] [options]
 | `--photo <file>` | attach a .jpg, .png or .webp as a photo; the text becomes its caption. |
 | `--as-file` | send the --file as a file to download, a video included. |
 | `--voice <file>` | send an Ogg Opus file as a voice message, alone, with no text. |
-| `--allow-any-file` | send a file even from a hidden folder, \~/.ssh or this CLI's own folders. |
+| `--allow-any-file` | send a file even from credential folders or this CLI's own folders. |
 
 #### `tg bot messages list`
 
