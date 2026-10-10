@@ -393,6 +393,11 @@ export const UNTESTED: Untested[] = [
       "cli-messaging src/cli/messenger/store-maintenance.test.ts and src/store/repair.test.ts cover preview rollback and retained data",
   },
   {
+    command: "store reset",
+    option: "--no-backup",
+    reason: "cli-messaging src/cli/messenger/store-maintenance.test.ts resets without a copy and checks backup: null",
+  },
+  {
     command: "tags add",
     option: "--contact",
     reason:
