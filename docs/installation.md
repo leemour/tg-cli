@@ -136,7 +136,7 @@ other tools:
 | settings | `~/.config/tg-cli/` | `~/Library/Preferences/tg-cli/` | `%APPDATA%\tg-cli\Config\` |
 | state | `~/.local/share/tg-cli/` | `~/Library/Application Support/tg-cli/` | `%LOCALAPPDATA%\tg-cli\Data\` |
 | cache | `~/.cache/tg-cli/` | `~/Library/Caches/tg-cli/` | `%LOCALAPPDATA%\tg-cli\Cache\` |
-| the local store | `~/.local/share/cli-messaging/messages.db` | under `~/Library/Application Support/cli-messaging/` | under `%LOCALAPPDATA%\cli-messaging\Data\` |
+| the local store | `~/.local/share/cli-messaging/wirecat.db` | under `~/Library/Application Support/cli-messaging/` | under `%LOCALAPPDATA%\cli-messaging\Data\` |
 | speech models | `~/.cache/cli-common/models/audio/` | under `~/Library/Caches/cli-common/` | under `%LOCALAPPDATA%\cli-common\Cache\` |
 
 - **settings** hold `config.json`, and `credentials.json` only on a machine with no keyring.
@@ -183,6 +183,10 @@ tg upgrade --check    # only say whether a newer version exists; installs nothin
 After an update, `tg upgrade` restarts each background `serve` that `tg` started, so the server does
 not keep running the old code. A `serve` you started by hand is not restarted: `tg` names it on
 stderr with the command that restarts it. `tg upgrade` never runs by itself.
+
+**From 0.44.1 or older, the local archive starts again.** The store is a new file, `wirecat.db`;
+the old `messages.db` stays where it was, untouched. Run `tg store fetch --all` to bring messages
+back. The login stays ([the store and other versions](archive.md#the-store-and-other-versions)).
 
 ### Upgrade JSON result
 

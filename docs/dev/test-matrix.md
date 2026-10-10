@@ -7,7 +7,7 @@ ran it · ⛔ not tested offline, with the reason and where it is checked instea
 Measured from the test run (`coverage/argv.jsonl`), not searched for — see
 [TESTING.md](TESTING.md) for how, and for the states and failures that cut across commands.
 
-**2342 ✅ · 59 ⛔ · 0 ❌** — 462 commands, 1939 options.
+**2347 ✅ · 59 ⛔ · 0 ❌** — 463 commands, 1943 options.
 
 | Command | Option | | Note |
 |---|---|---|---|
@@ -150,6 +150,11 @@ Measured from the test run (`coverage/argv.jsonl`), not searched for — see
 | `contacts context` | `--since-time` | ⛔ | cli-messaging src/cli/messenger/messenger.test.ts and src/store/contacts.test.ts cover local identity context and stored-message filtering; shared option parsing |
 | `contacts context` | `--chat` | ✅ |  |
 | `contacts context` | `--refresh` | ✅ |  |
+| `contacts timeline` |  | ✅ |  |
+| `contacts timeline` | `--scope` | ✅ |  |
+| `contacts timeline` | `--since-time` | ✅ |  |
+| `contacts timeline` | `--until-time` | ✅ |  |
+| `contacts timeline` | `--limit` | ✅ |  |
 | `contacts check` |  | ✅ |  |
 | `contacts check` | `--no-registries` | ✅ |  |
 | `contacts link` |  | ✅ |  |

@@ -85,7 +85,7 @@ is not encrypted ([what reaches the disk](security.md#what-reaches-the-disk)).
 [max-cli](https://github.com/WireCatLabs/max-cli):
 
 ```text
-~/.local/share/cli-messaging/messages.db       # Linux; MESSAGING_STORE moves it
+~/.local/share/cli-messaging/wirecat.db       # Linux; MESSAGING_STORE moves it
 ```
 
 `tg session end` logs out and leaves the store as it is.
@@ -460,6 +460,13 @@ the message store was written by a newer version (schema N, needs at least M; th
 ```
 
 Run `tg upgrade`. Nothing in the file is lost.
+
+**The store moved to a new file after 0.44.1.** It is now `wirecat.db`, beside the old `messages.db`
+in the same folder. `tg` does not read, convert or delete `messages.db`, so after the upgrade the
+local archive starts empty: `tg store fetch --all` brings the messages back from Telegram. What
+exists only on this computer — for example notes, aliases, tags, tasks and voice transcriptions —
+stays in `messages.db`. The login is a separate file and stays. Upgrade `tg` and `max` together:
+until both are on the new store, each sees a different archive.
 
 ## Reply rules
 

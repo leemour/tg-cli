@@ -3,6 +3,22 @@
 Notable changes to `@wirecat/tg-cli` (`@leemour/tg-cli` up to 0.42.0). One section per version, newest first; versions follow
 [semantic versioning](https://semver.org), so before `1.0.0` the command interface may still change.
 
+## Unreleased
+
+### Changed — may break scripts
+
+- **The local store is a new file, `wirecat.db`, and starts empty.** It sits beside the old
+  `messages.db`, which `tg` leaves as it is: not read, not converted, not deleted. Run
+  `tg store fetch --all` to bring messages back from Telegram. What exists only on this computer —
+  for example notes, aliases, tags, tasks and transcriptions — stays in `messages.db`. The login
+  stays. Upgrade max-cli at the same time, or the two see different archives.
+
+### What's new
+
+- `tg contacts timeline <person>`, also over MCP as the `contacts timeline` command of `tg_read`:
+  everything one person took part in, in every messenger linked to them, newest first, from the local
+  store. `--scope personal|work`, `--since-time`, `--until-time` and `--limit` narrow it.
+
 ## 0.44.1 — 10.10.2026
 
 ### Fixed
