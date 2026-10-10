@@ -2260,6 +2260,18 @@ tg store repair [options]
 |---|---|
 | `--dry-run` | say what it would do, and change nothing. |
 
+### `tg store reset`
+
+back the store up beside itself, then delete it and start an empty one at this build's schema; asks first, or --yes
+
+```sh
+tg store reset [options]
+```
+
+| Option | What it does |
+|---|---|
+| `--no-backup` | delete the store without backing it up first. |
+
 ### `tg store copies`
 
 the tables `store repair` kept as copies
