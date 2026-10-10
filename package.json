@@ -36,7 +36,7 @@
     "test:matrix": "vitest run >/dev/null && tsc --build --force >/dev/null && cli-dev test-matrix --program dist/program.js --untested scripts/test-matrix-untested.ts --name tg --check",
     "test:slow": "vitest run --reporter=json --outputFile=coverage/tests.json >/dev/null; cli-dev slow-tests",
     "smoke:bun": "bun run scripts/smoke.ts",
-    "docs:check": "node --experimental-strip-types scripts/docs-check.ts && cspell --no-progress --no-summary README.md 'docs/*.md' && rumdl check --config node_modules/@wirecat/cli-core/config/rumdl.toml --disable MD028 README.md docs/*.md",
+    "docs:check": "node --experimental-strip-types scripts/docs-check.ts && cspell --no-progress --no-summary README.md 'docs/*.md' && rumdl check --config config/wirecat/rumdl.toml --disable MD028 README.md docs/*.md",
     "parity:check": "pnpm build && node dist/bin/tg.js commands --json | cli-messaging-parity tg && node dist/bin/tg.js commands --json | cli-messaging-parity tg --pages README.md docs/*.md",
     "smoke:live": "pnpm build && node --experimental-strip-types scripts/smoke-live.ts",
     "release:check": "pnpm build && node --experimental-strip-types scripts/release-check.ts",
@@ -52,7 +52,10 @@
     "postinstall": "node install/postinstall.mjs",
     "bot:generate": "node --experimental-strip-types scripts/bot/generate.ts",
     "bot:generate:check": "node --experimental-strip-types scripts/bot/generate.ts --check",
-    "check:agent-docs": "pnpm build && node --experimental-strip-types scripts/check-agent-docs.ts"
+    "check:agent-docs": "pnpm build && node --experimental-strip-types scripts/check-agent-docs.ts",
+    "standards:check": "node config/wirecat/check.mjs",
+    "docs:lint": "markdownlint-cli2",
+    "docs:spell": "cspell lint --config cspell.json --no-progress README.md"
   },
   "dependencies": {
     "@mtcute/node": "0.32.3",
@@ -63,17 +66,19 @@
     "valibot": "1.5.0"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.5.14",
-    "@cspell/dict-en-gb": "^5.0.34",
-    "@cspell/dict-ru_ru": "^2.3.2",
+    "@biomejs/biome": "2.5.15",
+    "@cspell/dict-en-gb": "5.0.34",
+    "@cspell/dict-ru_ru": "2.3.3",
     "@napi-rs/canvas": "1.0.10",
     "@types/node": "^22.20.4",
     "@vitest/coverage-v8": "5.0.2",
-    "cspell": "^10.3.6",
-    "lefthook": "^2.1.14",
+    "cspell": "10.3.6",
+    "lefthook": "2.1.16",
     "rumdl": "^0.2.78",
     "typescript": "^7.0.2",
     "unpdf": "1.8.1",
-    "vitest": "^5.0.2"
+    "vitest": "^5.0.2",
+    "@cspell/dict-es-es": "3.0.9",
+    "markdownlint-cli2": "0.23.3"
   }
 }
