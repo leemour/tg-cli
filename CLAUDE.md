@@ -11,5 +11,13 @@ bite. A lane agent starts with its own handoff instead ([`docs/dev/agents.md`](d
 4. **No mtcute type crosses `src/telegram/`.** A lint rule enforces it.
 5. **The session and the app credentials never reach a log, a fixture or a document.**
 
-Conventional commits, a branch and a PR per change. Run `pnpm lint && pnpm typecheck && pnpm test`
+Conventional commits, a branch and a PR per change. Run `pnpm standards:check && pnpm lint`
 before committing. Comments sparse, only *why*.
+
+## Development check budget
+
+Keep commit and push hooks fast. Ordinary development and PRs use standards
+verification, lint, Markdown, and secret detection. Full typechecking, tests,
+coverage, builds, parity, browser and platform suites run for releases or an
+explicit manual validation. See the
+[shared policy](https://github.com/WireCatLabs/community/blob/main/standards/README.md#ci-and-hooks).

@@ -2,16 +2,8 @@ name: Windows and macOS
 
 # Check onboarding changes in PRs; other changes can be checked before a release by hand.
 on:
+  workflow_call:
   workflow_dispatch:
-  pull_request:
-    paths:
-      - ".github/workflows/windows.yml"
-      - "src/commands/setup*"
-      - "src/commands/session*"
-      - "src/commands/update*"
-      - "scripts/release/checks*"
-      - "package.json"
-      - "pnpm-lock.yaml"
 
 permissions:
   contents: read

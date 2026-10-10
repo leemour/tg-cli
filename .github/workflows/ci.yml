@@ -1,9 +1,8 @@
-name: CI
+name: Full validation
 
 on:
-  push:
-    branches: [main]
-  pull_request:
+  workflow_call:
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -68,3 +67,9 @@ jobs:
       # Style findings are annotations until the rules are tuned; the tone rule (an error) fails.
       - run: ./vale --output line README.md docs/*.md | sed 's/^/::warning::/' || true
       - run: ./vale --minAlertLevel error README.md docs/*.md
+
+  windows:
+    uses: ./.github/workflows/windows.yml
+
+  install_windows:
+    uses: ./.github/workflows/install-windows.yml
