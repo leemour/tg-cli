@@ -3,6 +3,19 @@
 Notable changes to `@wirecat/tg-cli` (`@leemour/tg-cli` up to 0.42.0). One section per version, newest first; versions follow
 [semantic versioning](https://semver.org), so before `1.0.0` the command interface may still change.
 
+## Unreleased
+
+### Changed
+
+- **The store prunes its growing logs on open**, at most once a day: agent tool calls older than 90 days are
+  deleted, and a handled bot update older than 30 days keeps its row but loses its payload. Upgrade max-cli and
+  cli-memo at the same time, as they share the store.
+
+### What's new
+
+- `tg store reset` for a store this build cannot migrate: it backs the store up beside itself, deletes it and
+  starts an empty one. It asks first; `--yes` skips the question and `--no-backup` skips the copy. From `@wirecat/cli-messaging` 0.221.0.
+
 ## 0.45.0 — 10.10.2026
 
 ### Changed — may break scripts
