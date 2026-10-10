@@ -215,8 +215,8 @@ its login by itself. After 30 days without use, it asks for a new code.
 Profile `permissions` decide which commands are available. The server shows no approval forms;
 the app's own approval is separate and depends on its settings.
 
-MCP makes hidden Unicode controls visible in text results and write arguments; subdivision flag emoji
-stay intact. Ordinary CLI machine JSON preserves original strings.
+MCP makes hidden Unicode controls visible in text results; subdivision flag emoji stay intact.
+Write arguments and ordinary CLI machine JSON preserve original strings.
 
 ## Permissions for this server process
 
@@ -352,7 +352,7 @@ pixels, report the app's limit instead of inventing text.
 
 `pdf.sourceSha256` and `pdf.sourceBytes` describe the original PDF; the top-level `sha256` and
 `totalBytes` describe the page image. `--if-sha256` checks the original PDF. `--page` cannot be
-combined with `--offset-bytes` or `--chunk-bytes`. PDFs can have up to 20 pages and 50 MiB; a PNG
+combined with `--offset-bytes` or `--chunk-bytes`. PDFs can be up to 50 MiB, with no fixed page-count limit; a PNG
 is at most 2000 pixels on each side, and one page image at most 1 MiB.
 
 A page image calls no external OCR service and indexes no text. After looking at every page, the

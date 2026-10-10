@@ -148,6 +148,18 @@ describe("machine output", () => {
     expect(stderr).toEqual([])
   })
 
+  it("--agent-json exposes controls while --json preserves original message text", async () => {
+    const text = "synthetic\u202e text"
+    const adapter = () => scripted({ history: async () => ({ items: [message("42", { text })], hasMore: false }) })
+    const ordinary = await tg(["messages", "list", "Valencia", "--json"], { adapter })
+    const agent = await tg(["messages", "list", "Valencia", "--agent-json"], { adapter })
+    expect([ordinary.code, agent.code]).toEqual([0, 0])
+    expect(JSON.parse(ordinary.stdout[0] ?? "").items[0].text).toBe(text)
+    const visible = JSON.parse(agent.stdout[0] ?? "").items[0].text as string
+    expect(visible).toBe("synthetic\\u202e text")
+    expect(agent.stderr).toEqual([])
+  })
+
   it("pages chats through the shared flags, and refuses --all with --page", async () => {
     let asked: unknown
     const { code, stdout } = await tg(["chats", "list", "--limit", "5", "--page", "3"], {
@@ -414,11 +426,11 @@ describe("sending", () => {
     expect(JSON.parse(queued.stdout[0] ?? "").items[0].scheduledFor).toBe("2030-01-01T09:00:00.000Z")
   })
 
-  it("attaches a --photo or a --file, and sends a hidden one only with --allow-any-file", async () => {
+  it("attaches a --photo or a --file, and sends a protected one only with --allow-any-file", async () => {
     const root = mkdtempSync(join(tmpdir(), "tg-upload-"))
     writeFileSync(join(root, "cat.png"), "png")
-    mkdirSync(join(root, ".private"))
-    writeFileSync(join(root, ".private", "notes.txt"), "n")
+    mkdirSync(join(root, ".ssh"))
+    writeFileSync(join(root, ".ssh", "notes.txt"), "n")
     const asked: SendOptions[] = []
     const adapter = () =>
       scripted({
@@ -427,7 +439,7 @@ describe("sending", () => {
           return { message: message("43", { text, outgoing: true }), sendId: options.sendId }
         },
       })
-    const hidden = join(root, ".private", "notes.txt")
+    const hidden = join(root, ".ssh", "notes.txt")
 
     const photo = await tg(["messages", "send", "me", "look", "--photo", join(root, "cat.png")], { adapter })
     const refused = await tg(["messages", "send", "me", "--file", hidden], { adapter })

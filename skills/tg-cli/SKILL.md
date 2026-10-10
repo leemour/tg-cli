@@ -388,9 +388,10 @@ to `messages download`. For MCP discover `attachments extract`, then use `tg_wri
 extraction returns a continuation `cursor` and metadata without file text. After an explicitly
 authorized fetch, `--catch-up` prepares local search within `--catch-up-chunks`,
 `--catch-up-messages` and `--catch-up-time`; `--no-catch-up` overrides profile `searchCatchUp`.
-from_dir and retained-file transfer refuse hidden files/folders, CLI folders and the message store;
-MCP output_dir also refuses these locations. Local PDF text: at most 20 pages and 30 seconds.
-Local voice: complete mono/stereo Ogg Opus, at most 10 minutes.
+from_dir and retained-file transfer protect known credential files/folders, CLI folders and the message store;
+MCP output_dir protects these locations too. Ordinary hidden working folders are allowed.
+Local PDF text has no fixed page-count limit or separate 30-second cutoff; cancellation and file/text budgets apply.
+Local voice requires complete mono/stereo Ogg Opus without a ten-minute cutoff; long recordings need more memory.
 No models are downloaded and no remote provider is called. First inspect local `store gaps plan`,
 then repair only with the owner's authorization using `store gaps repair --fingerprint <hash>`
 and explicit gap/message/time/page/pause bounds. `--background` uses ordinary store jobs.
