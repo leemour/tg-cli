@@ -459,14 +459,13 @@ store says:
 the message store was written by a newer version (schema N, needs at least M; this one speaks K) — upgrade this tool
 ```
 
-Run `tg upgrade`. Nothing in the file is lost.
+**The shared local store uses `wirecat.db`.** The old `messages.db` is not migrated: opening the default store deletes it and its `-wal` and `-shm` files.
+If you need old notes, aliases, tags, tasks or transcriptions, close programs using that file and copy it and any companion files to another folder **before first running the new version**.
+An explicit `MESSAGING_STORE` disables this cleanup; a file held by another process stays until a later store open.
+`tg store fetch --all` can fetch messages from Telegram again; data that existed only locally cannot be fetched from the server. Login stays separate.
+Update `tg` and `max` together so they use the same store.
 
-**The shared local store uses `wirecat.db`.** It is now `wirecat.db`, beside the old `messages.db`
-in the same folder. `tg` does not read, convert or delete `messages.db`, so after the upgrade the
-local archive starts empty: `tg store fetch --all` brings the messages back from Telegram. What
-exists only on this computer — for example notes, aliases, tags, tasks and voice transcriptions —
-stays in `messages.db`. The login is a separate file and stays. Upgrade `tg` and `max` together:
-until both are on the new store, each sees a different archive.
+For a `wirecat.db` schema update, run `tg upgrade` after preserving any needed old file.
 
 ## Reply rules
 

@@ -175,6 +175,10 @@ A Tab **never connects to Telegram**. With no local store yet, only commands and
 
 ## Upgrade
 
+**When updating from the old `messages.db`, preserve any local-only data first.** The current store is `wirecat.db`; opening the default store deletes the old `messages.db` and its `-wal`/`-shm` files.
+Before running the new version, close old programs and copy any needed file and companions to another folder. `tg store fetch --all` restores server messages, not old local notes or tags.
+Login stays ([the store and other versions](archive.md#the-store-and-other-versions)).
+
 ```sh
 tg upgrade            # with the package manager that installed tg: npm, pnpm or bun
 tg upgrade --check    # only say whether a newer version exists; installs nothing
@@ -183,10 +187,6 @@ tg upgrade --check    # only say whether a newer version exists; installs nothin
 After an update, `tg upgrade` restarts each background `serve` that `tg` started, so the server does
 not keep running the old code. A `serve` you started by hand is not restarted: `tg` names it on
 stderr with the command that restarts it. `tg upgrade` never runs by itself.
-
-**When updating from the old `messages.db` store, the local archive starts again.** The store is a new file, `wirecat.db`;
-the old `messages.db` stays where it was, untouched. Run `tg store fetch --all` to bring messages
-back. The login stays ([the store and other versions](archive.md#the-store-and-other-versions)).
 
 ### Upgrade JSON result
 
