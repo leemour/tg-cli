@@ -1,7 +1,7 @@
 import { readdirSync, readFileSync } from "node:fs"
 import { join } from "node:path"
 import { CliError, captureStreams, memoryKeyring } from "@wirecat/cli-core"
-import { listRuns, runsDirFor } from "@wirecat/cli-messaging/cli"
+import { listRuns, runsDirFor, startRun } from "@wirecat/cli-messaging/cli"
 import { describe, expect, it } from "vitest"
 import { TG } from "./app.js"
 import type { Adapter } from "./commands/context.js"
@@ -84,5 +84,50 @@ describe("run records", () => {
     expect(code).toBe(0)
     expect(JSON.parse(stdout[0] ?? "").items.some((one: { profile: string }) => one.profile === "listed")).toBe(true)
     expect(listRuns(runsDirFor(TG))).toHaveLength(before)
+  })
+  it("searches partial failure IDs with filters without connecting or recording itself", async () => {
+    const dir = runsDirFor(TG)
+    const recorded = startRun({
+      runsDir: dir,
+      profile: "search-fixture",
+      command: "messages download",
+      cliVersion: TG.version,
+    })
+    recorded.logger.info({
+      event: "response",
+      operation: "messages.download",
+      errorCode: "rate_limited",
+      ids: { message: "50" },
+    })
+    await recorded.finish("partial", {
+      partial: { failed: 1, failures: [{ id: "50", stage: "download", errorCode: "rate_limited" }] },
+    })
+    const before = listRuns(dir).length
+    const { code, stdout, stderr } = await tg([
+      "runs",
+      "search",
+      "50",
+      "--status",
+      "partial",
+      "--error-code",
+      "rate_limited",
+      "--operation",
+      "messages.download",
+      "--profile",
+      "search-fixture",
+      "--since-time",
+      "2020-01-01",
+      "--limit",
+      "1",
+      "--page",
+      "1",
+      "--json",
+    ])
+    expect(code).toBe(0)
+    expect(JSON.parse(stdout[0] ?? "").items).toMatchObject([
+      { profile: "search-fixture", status: "partial", partial: { failed: 1 } },
+    ])
+    expect(stderr).toEqual([])
+    expect(listRuns(dir)).toHaveLength(before)
   })
 })

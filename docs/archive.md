@@ -461,7 +461,7 @@ the message store was written by a newer version (schema N, needs at least M; th
 
 Run `tg upgrade`. Nothing in the file is lost.
 
-**The store moved to a new file after 0.44.1.** It is now `wirecat.db`, beside the old `messages.db`
+**The shared local store uses `wirecat.db`.** It is now `wirecat.db`, beside the old `messages.db`
 in the same folder. `tg` does not read, convert or delete `messages.db`, so after the upgrade the
 local archive starts empty: `tg store fetch --all` brings the messages back from Telegram. What
 exists only on this computer — for example notes, aliases, tags, tasks and voice transcriptions —

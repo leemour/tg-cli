@@ -411,17 +411,19 @@ line. Every list comes in one shape:
 { "items": [ … ], "page": 1, "limit": 20, "hasMore": true }
 ```
 
-An error comes apart from the data — one line on stderr, while stdout stays empty, so it cannot be
+An error that ends the command comes apart from the data — one line on stderr, while stdout stays empty, so it cannot be
 taken for an empty result:
 
 ```json
 {"error":{"code":"authentication_error","message":"…"}}
 ```
 
-Every error has a number — the exit code. A script decides what to do next by it: `4` log in, `5`
+An error that ends the command has a number — the exit code. A script decides what to do next by it: `4` log in, `5`
 the profile may not do this, `6` chat or message not found, `8` a limit, `9` Telegram did not answer
 in time, `14` unknown whether a message went. `tg commands --json` is the whole command tree, with
 every exit code. All codes: [docs/commands.md](docs/commands.md#exit-codes).
+
+Partial reads or downloads can return JSON with exit code `0`: check `complete` and `batch` or `issue`. Partial download JSONL adds `batch_summary`. [Resume unfinished work](docs/attachments.md#recover-a-partial-file-batch).
 
 ## Security
 

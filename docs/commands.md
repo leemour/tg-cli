@@ -2085,7 +2085,7 @@ tg store jobs list [options]
 
 | Option | What it does |
 |---|---|
-| `--state <state>` | only jobs in this state. One of: `running`, `done`, `failed`, `cancelled`, `died`. |
+| `--state <state>` | only jobs in this state. One of: `running`, `done`, `partial`, `failed`, `cancelled`, `died`. |
 
 #### `tg store jobs show`
 
@@ -2113,7 +2113,7 @@ tg store jobs cancel <job>
 
 #### `tg store jobs retry`
 
-start a failed or died job again, as a new job; the fetch resumes where the store stopped
+start a partial, failed or died job again, as a new job; the fetch resumes where the store stopped
 
 ```sh
 tg store jobs retry [job] [options]
@@ -2125,7 +2125,7 @@ tg store jobs retry [job] [options]
 
 | Option | What it does |
 |---|---|
-| `--failed` | every chat whose newest job failed or died. |
+| `--failed` | every chat whose newest job partial, failed or died. |
 
 #### `tg store jobs clear`
 
@@ -3679,6 +3679,28 @@ tg runs show <run-id>
 | Argument | | What it is |
 |---|---|---|
 | `run-id` | required | an id from `tg runs list`. |
+
+### `tg runs search`
+
+search recorded diagnostic metadata and events; no message contents
+
+```sh
+tg runs search [query] [options]
+```
+
+| Argument | | What it is |
+|---|---|---|
+| `query` | optional | case-insensitive literal diagnostic text. |
+
+| Option | What it does |
+|---|---|
+| `--status <status>` | run outcome. One of: `success`, `failed`, `partial`, `running`. |
+| `--error-code <code>` | one stable error code. |
+| `--operation <name>` | one operation, such as messages.download. |
+| `--profile <name>` | one recorded profile. |
+| `--since-time <time>` | runs starting on or after an ISO time or 2h / 1d ago. |
+| `--limit <n>` | matches per page, at most 100. Default: `20`. |
+| `--page <n>` | result page. Default: `1`. |
 
 ### `tg runs path`
 

@@ -55,11 +55,13 @@ In a pipe, JSON is chosen automatically. stdout carries data; stderr carries dia
 JSON flag wins over an attached terminal. `--help` and `--version` print text on stdout, exit with
 `0` and do not run the command.
 
-An error in machine mode is one object on stderr:
+An error that ends the command in machine mode is one object on stderr:
 `{"error":{"code":"…","message":"…","retryable":false}}`.
 An unknown command, option or a missing required argument exits with code 2. `tg commands --json`
 gives the complete table of exit codes. `--quiet` hides ordinary diagnostics but keeps errors.
 Machine output has no color and no animation; `NO_COLOR` turns off color in text output too.
+
+Partial reads and downloads can return JSON with exit code `0`: inspect `complete` and `batch` or `issue`. Partial download JSONL adds `batch_summary`; completed work stays saved. Errors include `actions` with recovery steps, settings and waits.
 
 ## Running without questions, and limits
 
