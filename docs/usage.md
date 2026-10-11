@@ -1090,8 +1090,9 @@ tg messages list me --jsonl | jq -r .text     # one message per line
   the same object.
 - A chat's messages have no page number: `{ "items": [...], "limit": 20, "hasMore": true }`.
 - `--jsonl`: one object per line, no wrapper; whether there is more is said on stderr only.
-- An error is `{ "error": { "code": "...", "message": "..." } }` on stderr, and stdout is empty, so a
+- An error that ends the command is `{ "error": { "code": "...", "message": "..." } }` on stderr, and stdout is empty, so a
   refusal can never be taken for an empty result.
+- Partial reads and downloads may exit `0`: inspect `complete` and `batch` or `issue`; partial download JSONL adds `batch_summary`.
 - **Branch on the exit code, not on the text.** The text changes; the code does not. `0` worked, `2`
   bad input, `4` not logged in, `5` the profile may not do this, `6` not found, `7` not on the list of
   allowed recipients, `8` a limit (the hourly limit, or Telegram's own), `9` Telegram did not answer

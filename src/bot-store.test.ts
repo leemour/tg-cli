@@ -144,8 +144,15 @@ describe("tg bot store fetch", () => {
 
   it("asks for a link when neither account knows the newest, and closes the reader on failure", async () => {
     const failed = await tg(["sales", "bot", "store", "fetch", CHAT, "--json"])
-    expect(failed.code).toBe(2)
-    expect(failed.err).toContain("--from <message link>")
+    expect(failed.code).toBe(0)
+    expect(failed.answer).toMatchObject({
+      complete: false,
+      issue: {
+        code: "validation_error",
+        message: expect.stringContaining("--from <message link>"),
+        actions: expect.any(Array),
+      },
+    })
     expect(close).toHaveBeenCalledOnce()
     const personalClose = vi.fn(async () => {})
     const other = await tg(["sales", "bot", "store", "fetch", CHAT, "--json"], {
@@ -157,7 +164,11 @@ describe("tg bot store fetch", () => {
           close: personalClose,
         }),
     })
-    expect(other.code).toBe(2)
+    expect(other.code).toBe(0)
+    expect(other.answer).toMatchObject({
+      complete: false,
+      issue: { code: "validation_error", actions: expect.any(Array) },
+    })
     expect(personalClose).toHaveBeenCalledOnce()
   })
 

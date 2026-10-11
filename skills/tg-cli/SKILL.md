@@ -97,8 +97,10 @@ the owner before `tg store fetch <chat> --last 100`; setup starts no background 
 
 ## Output
 
+Partial reads and downloads may exit `0`: inspect `complete`, `batch.failed` and `issue`; partial download JSONL adds `batch_summary`. Completed work stays saved; resume unfinished items after the suggested wait.
+
 - **In a pipe or with `--json`, stdout carries data only**: one JSON value. Everything else,
-  warnings included, goes to stderr. An error goes to stderr too, and stdout is then empty.
+  warnings included, goes to stderr. An error that ends the command goes to stderr too, and stdout is then empty.
 - **Most lists are an object, not an array**: `{ "items": [...], "page": 1, "limit": 20, "hasMore": true }`.
   A chat's messages are `{ "items": [...], "limit": 20, "hasMore": true }`.
 - **`--jsonl`**: one object per line, for `jq`. Whether there is more is said on stderr only.

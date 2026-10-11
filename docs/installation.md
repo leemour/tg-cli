@@ -184,7 +184,7 @@ After an update, `tg upgrade` restarts each background `serve` that `tg` started
 not keep running the old code. A `serve` you started by hand is not restarted: `tg` names it on
 stderr with the command that restarts it. `tg upgrade` never runs by itself.
 
-**From 0.44.1 or older, the local archive starts again.** The store is a new file, `wirecat.db`;
+**When updating from the old `messages.db` store, the local archive starts again.** The store is a new file, `wirecat.db`;
 the old `messages.db` stays where it was, untouched. Run `tg store fetch --all` to bring messages
 back. The login stays ([the store and other versions](archive.md#the-store-and-other-versions)).
 
