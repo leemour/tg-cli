@@ -11,7 +11,7 @@
 
 <p align="center">
   <a href="https://wirecat.dev/en/docs/tg">Docs</a> ·
-  <a href="docs/recipes.md">Examples</a> ·
+  <a href="https://github.com/WireCatLabs/tg-cli/blob/main/docs/recipes.md">Examples</a> ·
   <a href="https://wirecat.dev">WireCat</a>
 </p>
 
@@ -21,12 +21,13 @@
   <a href="https://nodejs.org/"><img src="https://img.shields.io/node/v/@wirecat/tg-cli" alt="Node"></a>
   <a href="https://bun.sh/"><img src="https://img.shields.io/badge/bun-tested-f9f1e1" alt="Bun"></a>
   <a href="https://www.npmjs.com/package/@wirecat/tg-cli"><img src="https://img.shields.io/npm/dm/@wirecat/tg-cli" alt="npm downloads"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-blue" alt="License: Apache 2.0"></a>
+  <a href="https://github.com/WireCatLabs/tg-cli/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-blue" alt="License: Apache 2.0"></a>
 </p>
 
 <!-- HERO DEMO SLOT: replace the example below with a 30–45 s recording (GIF or video) of an agent
-     answering a question from a real tg session, with source references. Use an absolute
-     raw.githubusercontent.com URL so npmjs.com renders it too. -->
+     answering a question with source references. Record on a demo account whose chats hold only
+     invented people (Alice Example, Bob Sample), never a real account: this repository is public.
+     Use an absolute raw.githubusercontent.com URL so npmjs.com renders it too. -->
 
 An example conversation (invented people, illustrative output):
 
@@ -51,9 +52,8 @@ tg inbox                          # other people's unread messages, in every cha
 ```
 
 Allow about five minutes. `tg setup` registers your own Telegram app at
-[my.telegram.org](https://my.telegram.org/apps) for you, logs in by QR code (Settings → Devices → Link
-Desktop Device on your phone), checks your first chats and installs the agent skill. Downloading older
-history is a separate step.
+[my.telegram.org](https://my.telegram.org/apps), logs in by QR code, checks your first chats and installs
+the agent skill. Downloading older history is a separate step.
 
 It needs **Node 22.16+ or 24+**, or **Bun**, on macOS, Linux or Windows. Try it without installing:
 `npx @wirecat/tg-cli --help`. The Windows one-line installer, phone login and where files go:
@@ -73,7 +73,6 @@ and the message itself.
 
 ```sh
 tg search all "venue"                         # messages, mail and notes kept on this computer
-tg search messages "venue" --chat "Book club"
 ```
 
 **Keep your promises.** *"Use tg CLI. What did I promise, and what am I still waiting on?"* `tg review`
@@ -119,8 +118,9 @@ ChatGPT or Claude in the browser can reach it through a login proxy and a tunnel
 - **Made for agents.** One operation per call, the same JSON shape every time with `--json`, a fixed
   exit code for each kind of failure, an MCP server and a skill.
 - **Safe by default.** Reading marks nothing read. A profile decides which actions an agent may take,
-  which chats it may send to, and how many messages an hour (30 by default). A message is never sent
-  twice, even when the connection breaks mid-send.
+  which chats it may send to, and how many messages an hour (30 by default). When a send's outcome is
+  unknown, `tg` says so and gives a repeat command that Telegram does not deliver twice
+  ([unknown outcomes](docs/usage.md#when-the-outcome-is-unknown)).
 - **The full Bot API too.** All 185 methods, next to the convenient bot commands.
 
 ## Personal account and bots
