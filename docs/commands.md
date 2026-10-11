@@ -3130,11 +3130,11 @@ tg tasks close <task> [options]
 
 ## `tg search`
 
-find things by text: search all for everything the local store holds, or one resource
+find things by text: one resource when you know it (mail, messages, notes), or search all across messages, mail and notes
 
 ### `tg search all`
 
-search everything the local store holds — messenger messages, mail and notes, and with --meetings a meeting account's transcripts — best match first; start here when you do not know where something was written
+search messenger messages, mail and notes in the local store, and the messenger's server for messages (--backend; mail and notes are local only), and with --meetings a meeting account's transcripts — best match first; not tasks, people, memories or projects. Use it when you do not know where something was written; search mail, messages or notes reads one kind with all its fields
 
 ```sh
 tg search all <query> [options]
@@ -3152,6 +3152,8 @@ tg search all <query> [options]
 | `--limit <n>` | how many. |
 | `--exact` | bare words and quotes match their exact form only, as exact:word does. |
 | `--timezone <zone>` | the IANA timezone for calendar date boundaries. |
+| `--backend <archive\|server\|both>` | where to search: the local archive, the messenger's server, or both (default: both; message discovery uses archive only). |
+| `--server-time <duration>` | stop waiting for the server after this long (default: 5s). |
 
 ### `tg search messages`
 
@@ -3206,6 +3208,7 @@ tg search mail [query] [options]
 | Option | What it does |
 |---|---|
 | `--chat <chat>` | only this mail thread, by id or subject. |
+| `--account <address>` | only this mail account, by its address; every mail account when unset. |
 | `--limit <n>` | how many. |
 | `--newest` | newest first instead of best first. |
 | `--exact` | bare words and quotes match their exact form only, as exact:word does; text: still matches every form. |
