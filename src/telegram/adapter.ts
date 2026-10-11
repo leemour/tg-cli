@@ -158,6 +158,14 @@ const publicName = (link: string): string =>
 const SAVED = new Set(["me", "self", "saved"])
 
 const PHONE_CODE_RETRIES = ["PHONE_CODE_EMPTY", "PHONE_CODE_EXPIRED", "PHONE_CODE_INVALID", "PHONE_CODE_HASH_EMPTY"]
+interface DialogWalk {
+  dialogs: ReturnType<TelegramClient["iterDialogs"]>
+  seen: Set<string>
+  /** Read past the last page, to tell whether there is more; the next page starts with them. */
+  held: Chat[]
+  at: number
+}
+
 /** Telegram's own cap on a group's member list. */
 const MEMBERS_MAX = 10_000
 /** Pages of 100 that `chats events` reads at most; the rest is `more`. */
@@ -181,6 +189,8 @@ export class TelegramAdapter {
   readonly #sessionPath: string
   readonly #login: string | undefined
   readonly #proxyFailed: Promise<never> | undefined
+  /** Where the last page of `chats` stopped; any other offset, or a failure, starts a new walk. */
+  #walk: DialogWalk | undefined
 
   /** Async because the runtime's SQLite module is imported on demand (cli-messaging `openCache`). */
   static async open(options: AdapterOptions): Promise<TelegramAdapter> {
@@ -357,13 +367,28 @@ export class TelegramAdapter {
     })
   }
 
-  /** Telegram lists dialogs by position, so a page is the dialogs up to its end, cut; `limit` unset is every one. */
+  /**
+   * Telegram lists dialogs by position; `limit` unset is every one. The next page goes on with the walk the
+   * last one left off, so paging through N chats asks Telegram for each dialog once, not once per page.
+   */
   chats({ limit, offset }: { limit?: number; offset: number }): Promise<Page<Chat>> {
     return this.#call(async () => {
-      const wanted = limit === undefined ? Number.POSITIVE_INFINITY : offset + limit + 1
-      const items = await this.#dialogs(wanted)
-      const end = limit === undefined ? items.length : offset + limit
-      return { items: items.slice(offset, end), hasMore: items.length > end }
+      if (limit === undefined) {
+        const items = await this.#dialogs(Number.POSITIVE_INFINITY)
+        return { items: items.slice(offset), hasMore: false }
+      }
+      const resumed = this.#walk
+      this.#walk = undefined
+      const walk: DialogWalk =
+        resumed && offset > 0 && resumed.at === offset
+          ? resumed
+          : { dialogs: this.#client.iterDialogs({ archived: "keep" }), seen: new Set<string>(), held: [], at: 0 }
+      const pulled = await this.#pull(walk, offset - walk.at + limit + 1)
+      const items = pulled.slice(offset - walk.at, offset - walk.at + limit)
+      walk.held = pulled.slice(offset - walk.at + limit)
+      walk.at = offset + items.length
+      this.#walk = walk
+      return { items, hasMore: walk.held.length > 0 }
     })
   }
 
@@ -1126,6 +1151,19 @@ export class TelegramAdapter {
    * pinned chats again further down: 8 of 1361 were listed twice on 2026-10-01, and a pinned chat's
    * title then matched itself as two chats.
    */
+  async #pull(walk: DialogWalk, wanted: number): Promise<Chat[]> {
+    const chats = walk.held
+    while (chats.length < wanted) {
+      const next = await walk.dialogs.next()
+      if (next.done) break
+      const chat = toChat(next.value)
+      if (walk.seen.has(chat.id)) continue
+      walk.seen.add(chat.id)
+      chats.push(chat)
+    }
+    return chats
+  }
+
   async #dialogs(wanted: number): Promise<Chat[]> {
     const seen = new Set<string>()
     const chats: Chat[] = []
