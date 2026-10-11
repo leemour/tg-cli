@@ -266,9 +266,13 @@ class FakeClient {
   resendCode = vi.fn(async (_params: unknown): Promise<unknown> => ({ type: "sms", phoneCodeHash: "second" }))
   signIn = vi.fn(async (_params: unknown): Promise<unknown> => user(1, "Owner", { isSelf: true }))
   checkPassword = vi.fn(async (_password: unknown): Promise<unknown> => user(1, "Owner", { isSelf: true }))
+  dialogsPulled = 0
   async *iterDialogs(options: unknown) {
     this.#record("iterDialogs", [options])
-    yield* this.dialogs
+    for (const one of this.dialogs) {
+      this.dialogsPulled += 1
+      yield one
+    }
   }
   getHistory = async (...args: unknown[]) => {
     this.#record("getHistory", args)
@@ -561,6 +565,47 @@ describe("reading", () => {
     expect(chats.hasMore).toBe(true)
     expect(client.calls.find((call) => call.method === "iterDialogs")?.args[0]).toEqual({ archived: "keep" })
     expect((await adapter.chats({ offset: 0 })).items).toHaveLength(4)
+  })
+
+  it("pages through every chat in one walk of the dialogs, not a walk per page", async () => {
+    const { adapter, client } = await open()
+    client.dialogs = Array.from({ length: 350 }, (_, index) => dialog(group(-(index + 1), `chat ${index + 1}`)))
+
+    const ids: string[] = []
+    for (let offset = 0; ; ) {
+      const page = await adapter.chats({ limit: 100, offset })
+      ids.push(...page.items.map((chat) => chat.id))
+      offset += page.items.length
+      if (!page.hasMore) break
+    }
+
+    expect(new Set(ids).size).toBe(350)
+    expect(client.calls.filter((call) => call.method === "iterDialogs")).toHaveLength(1)
+    expect(client.dialogsPulled).toBe(350)
+  })
+
+  it("walks again from the top when a listing starts over or jumps", async () => {
+    const { adapter, client } = await open()
+    client.dialogs = [1, 2, 3, 4, 5].map((id) => dialog(group(-id, `chat ${id}`)))
+
+    await adapter.chats({ limit: 2, offset: 0 })
+    expect((await adapter.chats({ limit: 2, offset: 0 })).items.map((chat) => chat.id)).toEqual(["-1", "-2"])
+    expect((await adapter.chats({ limit: 2, offset: 3 })).items.map((chat) => chat.id)).toEqual(["-4", "-5"])
+    expect(client.calls.filter((call) => call.method === "iterDialogs")).toHaveLength(3)
+  })
+
+  it("walks again when the next page comes more than a minute later", async () => {
+    const { adapter, client } = await open()
+    client.dialogs = [1, 2, 3, 4].map((id) => dialog(group(-id, `chat ${id}`)))
+    vi.useFakeTimers()
+    try {
+      await adapter.chats({ limit: 2, offset: 0 })
+      vi.advanceTimersByTime(61_000)
+      expect((await adapter.chats({ limit: 2, offset: 2 })).items.map((chat) => chat.id)).toEqual(["-3", "-4"])
+      expect(client.calls.filter((call) => call.method === "iterDialogs")).toHaveLength(2)
+    } finally {
+      vi.useRealTimers()
+    }
   })
 
   it("lists a pinned chat once when Telegram's pages bring it again, and finds it by title", async () => {
@@ -878,6 +923,31 @@ describe("reading", () => {
     })
     const asked = client.calls.filter((call) => call.method === "getChatMembers").map((call) => call.args[1])
     expect(asked).toEqual([{ offset: 2, limit: 2 }])
+  })
+
+  it("pauses a second between pages of one member list instead of asking for them back to back", async () => {
+    const { adapter, client } = await open()
+    client.peer = group(-100500, "Test group")
+    const everyone = Array.from({ length: 450 }, (_, index) => ({ user: user(index + 2, "Alice Example") }))
+    client.getChatMembers = async (...args: unknown[]) => {
+      client.calls.push({ method: "getChatMembers", args })
+      const { offset, limit } = args[1] as { offset: number; limit: number }
+      return Object.assign(everyone.slice(offset, offset + limit), { total: everyone.length })
+    }
+    const pages = () => client.calls.filter((call) => call.method === "getChatMembers").length
+    vi.useFakeTimers()
+    try {
+      const reading = adapter.members("-100500", { offset: 0 })
+      await vi.advanceTimersByTimeAsync(999)
+      expect(pages()).toBe(1)
+      await vi.advanceTimersByTimeAsync(1)
+      expect(pages()).toBe(2)
+      await vi.advanceTimersByTimeAsync(1000)
+      expect((await reading).items).toHaveLength(450)
+      expect(pages()).toBe(3)
+    } finally {
+      vi.useRealTimers()
+    }
   })
 
   it("counts a supergroup by its member list, which the chat and its full info can lag behind", async () => {

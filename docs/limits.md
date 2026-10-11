@@ -79,7 +79,10 @@ to be done; `tg flood clear` lifts it early if you know Telegram no longer limit
 - `store fetch`: pages of up to 100 messages, `--pause` between pages (1 s by default), 1000 messages a
   run unless `--limit` says otherwise. `--estimate` counts the requests first and sends none.
 - `messages download --all`: one request per page and per file; files are paced too.
-- `chats members list --all`, `chats list --all` and gap repair are paced the same way.
+- `store fetch --all` lists the chats a page of 100 at a time, one turn of the pace each.
+- `chats list --all` reads every chat in one turn: one request per 100 chats, back to back.
+- `chats members list --all`: pages of 200 members, 1 s apart, up to Telegram's cap of 10,000.
+- Gap repair reads page by page with a 1 s pause, as `store fetch` does.
 
 ## Background jobs
 

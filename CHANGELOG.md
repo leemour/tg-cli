@@ -3,6 +3,16 @@
 Notable changes to `@wirecat/tg-cli`. One section per version, newest first; versions follow
 [semantic versioning](https://semver.org), so before `1.0.0` the command interface may still change.
 
+## Unreleased
+
+### Fixed
+
+- Paging through the chats (`store fetch --all` lists them 100 at a time) reads each dialog from Telegram once.
+  Each page used to walk every dialog from the top again, so about 1,400 chats cost over 100 requests back to back
+  instead of about 15.
+- `chats members list --all` waits 1 s between pages of 200 members. It used to ask for up to 50 pages back
+  to back, although the limits page said it was paced.
+
 ## 0.46.3 — 11.10.2026
 
 ### What's new
