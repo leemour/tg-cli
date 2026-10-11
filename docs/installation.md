@@ -14,13 +14,14 @@ The words this page uses:
 - **Keyring**: the password store of your operating system. `tg` keeps your Telegram app keys there.
 - **Skill**: a short instruction file that tells your AI agent how to use `tg`.
 
-Installation builds nothing: SQLite comes from the runtime itself, so there is no native module to
-compile. It starts nothing in the background. A global npm installation can install the bundled
+Installation builds nothing: SQLite comes from the runtime itself, or from tg's own copy when a Linux
+Node's system SQLite is too old, so there is no native module to compile. It starts nothing in the background. A global npm installation can install the bundled
 skill and, on Windows, repair the user PATH. It never logs in or reads chats.
 
 ## What it needs
 
-- **Node 22.16+ (22.x) or 24+** with npm. The command also supports **Bun**.
+- **Node 22.16+ (22.x) or 24+** with npm. The command also supports **Bun**; CI runs the built
+  command under both.
 - Linux, macOS or Windows.
 - **Your own Telegram app** from [my.telegram.org](https://my.telegram.org/apps). `tg` asks for it at
   the first login and can register it for you ([your Telegram app](sessions.md#the-app-from-mytelegramorg)).

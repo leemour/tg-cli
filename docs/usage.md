@@ -1124,6 +1124,10 @@ mkdir -p ~/.claude/skills/tg-cli && tg skill show > ~/.claude/skills/tg-cli/SKIL
 mkdir -p ~/.agents/skills/tg-cli && tg skill show > ~/.agents/skills/tg-cli/SKILL.md   # Codex, Gemini CLI
 ```
 
+Local Cursor also reads `~/.agents/skills/tg-cli/`. The installed instructions come from the same
+package version as `tg`. Start a new agent session if it does not see the skill. How each agent finds skills: [Codex](https://learn.chatgpt.com/docs/build-skills),
+[Gemini CLI](https://geminicli.com/docs/cli/skills/), [Cursor](https://cursor.com/docs/skills).
+
 An agent without a terminal (for example Claude Desktop or Cursor) connects over MCP:
 [the MCP server](mcp.md).
 

@@ -221,6 +221,15 @@ see [running on a schedule](recipes.md#running-on-a-schedule).
 | `tg chats moderate <chat>` | check the group by its rules; does what the rules allow |
 | `tg messages delete --for-everyone`, `pin`, `unpin` | delete for everyone, pin |
 
+Only the group owner can enable topics. An existing supergroup needs no upgrade. Upgrading a basic
+group gives it a new chat id; the local store keeps older messages under the original id and does not
+merge the two histories.
+
+In a forum topic, text, photo and file captions and scheduled sends all keep the topic, and an explicit
+reply must belong to that topic. A closed or missing topic is refused before anything is sent. When the
+outcome of a send is unknown, repeat it with the same `--send-id`, chat and topic; for a scheduled send,
+check `tg messages scheduled <chat>` instead of repeating it.
+
 An agent connected over the [MCP server](mcp.md) can run the same commands, as far as the
 profile's permissions allow.
 

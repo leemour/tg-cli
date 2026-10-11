@@ -55,7 +55,7 @@ tg support bot api get-me --json
 first login asks for your own Telegram app; `tg` can register it for you
 ([your Telegram app](sessions.md#the-app-from-mytelegramorg)).
 
-How `tg` differs from other tools: the [project README on GitHub](https://github.com/WireCatLabs/tg-cli#readme).
+How `tg` differs from other tools: [compared with other tools](compare.md).
 
 ## Where to go next
 
