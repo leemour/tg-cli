@@ -7,6 +7,8 @@ pnpm docs:check                                     # links, anchors, user pages
 pnpm test:slow                                      # the 20 slowest tests and the 10 slowest files
 pnpm build && pnpm smoke:bun                        # the built command, executed under Bun
 pnpm release:check                                  # all of the above and the release's own checks
+pnpm generate                                       # rewrites docs/commands.md from the command tree
+bin/tg session start                                # everything under .tg/ in this checkout, never the real profile
 ```
 
 CI runs all of them ([ci.yml](../../.github/workflows/ci.yml)). Windows and macOS run by hand before

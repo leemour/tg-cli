@@ -237,7 +237,8 @@ account you use now; a note about a person shows in every `tg` login profile on 
 sees them. `contacts rename` changes
 the name in your Telegram contacts — a different thing. A command finds a person by your alias unless it
 matches someone else's name; then it needs the id. `--revision` stops an edit of a note that changed since
-you read it.
+you read it. Refreshing contacts keeps your aliases and notes, and linking two people does not combine
+them.
 
 ## Next step
 

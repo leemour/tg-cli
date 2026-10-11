@@ -28,8 +28,12 @@ MCP, other people's text on your screen, how to report a vulnerability — is on
   checked by every command and MCP tool ([below](#the-send-guard)).
 - **`tg` talks to Telegram, npm and my.telegram.org** — through your proxy when you set one —
   and to model download hosts or explicitly configured embedding/analysis endpoints ([below](#what-goes-over-the-network)).
+- **The local store is not encrypted, and it stays after you log out.** Only whole-disk encryption
+  protects it from a stolen disk.
 - **It does not protect against someone with your user account on this machine**, or an agent
-  allowed to change the settings.
+  allowed to change the settings. The limits stop an agent talked into sending by a message it read,
+  not one that sets out to get round them; against that, run the agent in a sandbox or as a separate
+  user.
 
 ## Where the login lives
 
