@@ -26,7 +26,7 @@ Use `--json --no-input` for headless work; supply credentials explicitly through
 `--fields id,text` selects each list item's fields while preserving pagination, coverage and
 operation identifiers. For ids use `--fields id`; `items.id` also works, and `items[].id` is unnecessary.
 `--max-output-bytes` and `--max-input-bytes` set byte budgets; one-shot actions default to 30 seconds,
-changed with `--timeout`. Before a sensitive write, global `--dry-run` checks syntax and permissions
+changed with `--timeout`; background history fetch jobs have no default deadline. Before a sensitive write, global `--dry-run` checks syntax and permissions
 before action; it opens no messenger connection, reserves no write and leaves targets unresolved.
 See the [CLI contract](https://github.com/WireCatLabs/tg-cli/blob/main/docs/cli-contract.md).
 

@@ -3,6 +3,23 @@
 Notable changes to `@wirecat/tg-cli`. One section per version, newest first; versions follow
 [semantic versioning](https://semver.org), so before `1.0.0` the command interface may still change.
 
+## 0.46.2 — 11.10.2026
+
+### Fixed
+
+- Archive discovery now handles permission questions such as “Can contractors access production?”
+  without treating the final question mark as a wildcard. Strict search and filters keep their behavior.
+- Mail searches and linked-person context also read dedicated mail storage, alongside older imports.
+  Mail supports sender and thread filters; search results list each email locator once.
+- Background history fetches no longer stop at the default 30-second deadline; an explicit
+  `--timeout` still applies.
+
+### Changed — may break scripts
+
+- A permanent history-fetch failure before the first saved page now exits with an error instead
+  of exit code `0` with an `issue`. Bot history without a starting message exits with code `2`
+  and requests `--from`. Failures after progress still report partial results.
+
 ## 0.46.1 — 11.10.2026
 
 ### Fixed

@@ -98,8 +98,8 @@ is not told that you looked.
 ## What they said: `contacts context`
 
 Without `--chat`, it gives an overview from the store: the chats you share, the last message each way,
-their recent messages in your direct chat and in groups, and where others mentioned them. It never
-connects.
+their recent messages in your direct chat and in groups, and where others mentioned them. Linked
+email identities also contribute sent and received mail. It never connects.
 
 ```sh
 tg contacts context @example_user

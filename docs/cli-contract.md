@@ -75,8 +75,8 @@ A write at the `ask` permission level needs an explicit `--yes`; a deletion need
 `--allow-dangerous`. These flags only answer the question. All other permission checks still apply.
 
 A one-shot command has 30 seconds. `--timeout 2m` changes that, and the time spent waiting for stdin
-counts too. Persistent commands and interactive login end in their own way and do not have this
-short limit. Ctrl-C (SIGINT) stops a one-shot command with exit code 130 and normally ends a
+counts too. Persistent commands, interactive login and background history fetch jobs do not have this
+short default limit. An explicit timeout still bounds a background fetch. Ctrl-C (SIGINT) stops a one-shot command with exit code 130 and normally ends a
 persistent command with 0. SIGTERM exits with 143. If the program reading the output closes the
 pipe, `tg` ends quietly.
 

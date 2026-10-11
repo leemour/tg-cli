@@ -90,8 +90,9 @@ tg search topics "Hiking" "gear"                  # topic titles in one forum gr
 `search all` says what each hit is — a message (`msg:…`) or a note (`note:…`). `search messages` never
 returns mail, and `search mail` never returns Telegram messages; only `search all` covers both. `--type`
 narrows `search messages` to text, voice or files (`text|voice|file`) and `search notes` to notes
-written in memo or imported from a folder (`internal|file`). When a query uses a field mail or notes
-don't have (`chat:`, `from:`), `search all` leaves them out and says so.
+written in memo or imported from a folder (`internal|file`). Mail supports `chat:` for an email thread
+and `from:` for its sender. When a field does not apply — `kind:`/`topic:` for mail, or `chat:`/`from:`
+for notes — `search all` skips that resource and explains why.
 
 Mail and notes reach the store through memo: `memo mail import` and `memo import`. Without them,
 `search all` searches messages only.
