@@ -178,6 +178,7 @@ export const toMessage = (message: TgMessage): Message => {
     comments: message.replies?.hasComments ? message.replies.count : undefined,
     groupedId: message.groupedIdUnique ?? undefined,
     action: message.action?.type,
+    poll: message.media?.type === "poll" ? pollMetadata(message.media) : undefined,
     link: linkOf(message),
     graph: {
       version: 1,
@@ -220,6 +221,12 @@ export const toMessage = (message: TgMessage): Message => {
     ...(metadata ? { providerMetadata: metadata } : {}),
     ...mentionsOf(message),
   }
+}
+
+/** Enough of a poll to read a channel's history without a `polls show` per message. */
+const pollMetadata = (poll: TgPoll) => {
+  const { question, voters, answers } = toPoll("", "", poll)
+  return { question, voters, answers: answers.map(({ text, voters }) => ({ text, voters })) }
 }
 
 export const toHistoryChannel = (chats: tl.TypeChat[], id: number): tl.TypeInputChannel | undefined => {
@@ -448,7 +455,10 @@ export const toInputMedia = (
 /** An answer's id is its option bytes as base64url: Telegram's own, and not a position a person could guess. */
 export const answerId = (data: Uint8Array): string => Buffer.from(data).toString("base64url")
 
-/** Voters are counted only once the owner voted or the poll closed; before that Telegram says nothing. */
+/**
+ * Each answer's voters are counted only once the owner voted or the poll closed; before that Telegram says
+ * nothing about them. The total comes either way.
+ */
 export const toPoll = (chatId: string, messageId: string, poll: TgPoll): Poll => {
   const counted = poll.isClosed || poll.answers.some((answer) => answer.chosen)
   return {
@@ -464,7 +474,7 @@ export const toPoll = (chatId: string, messageId: string, poll: TgPoll): Poll =>
     closed: poll.isClosed,
     multiple: poll.isMultiple,
     anonymous: !poll.isPublic,
-    voters: counted ? poll.voters : null,
+    voters: counted ? poll.voters : (poll.results?.totalVoters ?? null),
     quiz: poll.isQuiz,
     revote: !poll.isRevotingDisabled,
     creator: poll.isCreator,

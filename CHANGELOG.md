@@ -3,6 +3,18 @@
 Notable changes to `@wirecat/tg-cli`. One section per version, newest first; versions follow
 [semantic versioning](https://semver.org), so before `1.0.0` the command interface may still change.
 
+## Unreleased
+
+### What's new
+
+- **A poll in `messages list` carries its question, answers and total votes** under
+  `providerMetadata.poll`, so a channel's polls read without one `polls show` per message.
+
+### Fixed
+
+- **`polls show` gives a poll's total votes before you vote.** Telegram sends the total either way; only each
+  answer's count waits for your vote. The total used to be `null` too.
+
 ## 0.46.3 — 11.10.2026
 
 ### Changed — may break scripts
