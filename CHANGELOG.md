@@ -9,21 +9,24 @@ Notable changes to `@wirecat/tg-cli`. One section per version, newest first; ver
 
 - Package references, documentation and fixtures use the WireCat namespace throughout.
 
-## 0.46.0 — 11.10.2026
-
 ### Changed — may break scripts
 
 - Independent file or history-page failures retain successful work and return `complete: false`, `batch` or `issue` with exit code `0`. Scripts must check completeness; partial download JSONL adds `batch_summary`. Errors include recovery `actions`. Resuming downloads retries failed checkpoint IDs.
 - Batches stop new requests after ten attempts when failures exceed 50%; `MESSAGING_BATCH_MAX_ERROR_PERCENT` adjusts the percentage, with 100 disabling that percentage stop. Throttling and authentication failures stop earlier; writes with unknown outcomes are never automatically replayed.
+### What's new
+
+- Set extraction and retained-file transfer size through `MESSAGING_ATTACHMENT_MAX_MIB` (default 50). PDF previews now allow 4000 pixels per side and 8 MiB per page; `MESSAGING_PDF_PREVIEW_MAX_PIXELS` and `MESSAGING_PDF_PREVIEW_MAX_MIB` adjust those budgets. Larger values need more memory; external OCR and decompression budgets remain separate.
+- `tg runs search`, also the `runs search` command in MCP `tg_read`, searches safe diagnostic records by text, status, error code and time without connecting to Telegram.
+
+## 0.46.0 — 11.10.2026
+
+### Changed — may break scripts
 
 - **The store prunes its growing logs on open**, at most once a day: agent tool calls older than 90 days are
   deleted, and a handled bot update older than 30 days keeps its row but loses its payload. Upgrade max-cli and
   cli-memo at the same time, as they share the store.
 
 ### What's new
-
-- Set extraction and retained-file transfer size through `MESSAGING_ATTACHMENT_MAX_MIB` (default 50). PDF previews now allow 4000 pixels per side and 8 MiB per page; `MESSAGING_PDF_PREVIEW_MAX_PIXELS` and `MESSAGING_PDF_PREVIEW_MAX_MIB` adjust those budgets. Larger values need more memory; external OCR and decompression budgets remain separate.
-- `tg runs search`, also the `runs search` command in MCP `tg_read`, searches safe diagnostic records by text, status, error code and time without connecting to Telegram.
 
 - `tg store reset` for a store this build cannot migrate: it backs the store up beside itself, deletes it and
   starts an empty one. It asks first; `--yes` skips the question and `--no-backup` skips the copy.
@@ -83,7 +86,6 @@ Notable changes to `@wirecat/tg-cli`. One section per version, newest first; ver
 ### Changed — may break scripts
 
 - **The package is `@wirecat/tg-cli` and its repository belongs to WireCatLabs.** Use this package for installations and updates.
-
 
 - Local transcription accepts complete mono or stereo Ogg Opus recordings up to 10 minutes.
   Split longer recordings first. PDF text extraction supports at most 20 pages and 30 seconds.
