@@ -398,9 +398,24 @@ describe("tg bot watch", () => {
     expect(polls[1]).toMatchObject({ offset: 9 })
     expect(watched.code).toBe(0)
     expect(watched.lines.map((line: { event: string }) => line.event)).toEqual(["message", "joined"])
+    expect(watched.lines.map((line: { update: unknown }) => line.update)).toEqual([
+      { id: "7", kind: "message" },
+      { id: "8", kind: "chat_member" },
+    ])
     stop = new AbortController()
     const kept = await tg(["sales", "bot", "messages", "show", "Team", "600", "--offline", "--json"])
     expect(kept.answer).toMatchObject({ text: "hi bot", senderId: "42" })
+  })
+
+  it("**prints an update once** when Telegram delivers it again", async () => {
+    const update = {
+      update_id: 10,
+      message: { message_id: 602, chat: GROUP, from: ANN, date: 1_759_312_802, text: "once" },
+    }
+    pages = [[update], [update]]
+    const watched = await tg(["sales", "bot", "watch", "--jsonl"])
+
+    expect(watched.lines.map((line: { id: string }) => line.id)).toEqual(["602"])
   })
 
   it("asks Telegram for only the --types given", async () => {
