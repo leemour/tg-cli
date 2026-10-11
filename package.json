@@ -1,6 +1,6 @@
 {
   "name": "@wirecat/tg-cli",
-  "version": "0.46.0",
+  "version": "0.46.1",
   "description": "A local command line interface for a personal Telegram account, built for agents and scripts",
   "license": "Apache-2.0",
   "author": "Viacheslav Ptsarev",
@@ -63,8 +63,8 @@
   },
   "dependencies": {
     "@mtcute/node": "0.32.3",
-    "@wirecat/cli-core": "0.19.3",
-    "@wirecat/cli-messaging": "0.223.0",
+    "@wirecat/cli-core": "0.19.4",
+    "@wirecat/cli-messaging": "0.225.0",
     "commander": "15.0.0",
     "undici": "7.30.0",
     "valibot": "1.5.0"
