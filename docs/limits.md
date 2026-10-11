@@ -57,7 +57,8 @@ TG_REQUESTS_PER_MINUTE=30 tg store fetch "Book club"
 | longer | stops with exit code `8` (`rate_limited`) and `retryAfterMs` in the JSON |
 
 `store fetch` and `messages download --all` wait out a wait of up to 5 minutes between pages and go on;
-a longer one stops the run, and the next run resumes from what was already saved.
+a longer one stops the run, and the next run resumes from what was already saved. `store fetch --all`
+also waits through short Telegram waits while listing chats.
 
 **A wait holds the whole profile.** Until it ends, every process's next request waits past it, and one
 that would have to wait more than 5 minutes fails at once with exit code `8` without asking Telegram.

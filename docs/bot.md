@@ -212,7 +212,7 @@ tg sales bot store fetch -1001234567890 --last 200 --pause 1s
 
 `--from` starts at that message, inclusive, and must name the same chat. Without it, the command
 uses the newest message the bot has kept for the chat. If there is none, it reads the newest from
-the existing `default` personal session. If neither knows a number, it asks for `--from`.
+the existing `default` personal session. If neither knows a number, it exits with code `2` and asks for `--from`.
 It uses the bot profile's Telegram app credentials (`api_id` and `api_hash`), or the existing
 `default` profile's credentials; `TG_API_ID` and `TG_API_HASH` also work. No personal login is made.
 

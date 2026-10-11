@@ -4,7 +4,7 @@ If you use an AI agent with tg, you do not need to learn this language: describe
 plain words and the agent writes the query. This page is for people who type searches themselves, and
 for anyone who wants every filter: exact operators, every field, presets, date rules and limits.
 
-It is the reference for the queries of `tg search messages`, `tg search all`, `tg stats messages show`,
+It is the reference for the queries of `tg search messages`, `tg search mail`, `tg search all`, `tg stats messages show`,
 saved searches, and the `--filter` of [topic search](topic-search.md). For everyday examples start with
 [message search](search.md).
 
@@ -24,6 +24,9 @@ support is an error, never silently ignored. The
 examples; the
 [technical specification](https://github.com/WireCatLabs/cli-messaging/blob/v0.212.0/docs/search/query-language-spec.md)
 describes the grammar and the compiler.
+
+For mail, `chat:` and `--chat` select an email thread by id or subject; `from:` selects a
+correspondent. Mail does not have `kind:` or `topic:`.
 
 ## What it can do
 

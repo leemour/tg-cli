@@ -141,7 +141,8 @@ tg store fetch --all --since-time 365d        # every chat, back to a year ago
 after every page it records what it now holds, so a stop loses nothing. Ctrl-C, `--timeout`, the
 `--limit` cap, `--since-time`, `--last` and a long wait from Telegram all stop it, and the next run
 skips what is already held. `--since-time` and `--last` say how far back to go, so give one of them, not
-both.
+both. A permanent failure before the first saved page exits with an error; after progress, a
+failure can return saved work with an `issue`.
 
 **Every page is a request from your account**, of up to 100 messages. A run stops after
 `--limit` messages (1000 by default); `--page-size` sets how many one request asks for (100 by
@@ -155,7 +156,8 @@ To find and fill gaps inside a chat's saved history, and to prepare topic search
 
 ### In the background
 
-A long fetch can run as a job that outlives the command:
+A long fetch can run as a job that outlives the command. It has no default 30-second deadline;
+an explicit `--timeout` still limits it:
 
 ```sh
 tg store fetch "Book club" --background     # prints the job id
