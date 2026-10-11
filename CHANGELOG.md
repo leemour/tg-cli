@@ -1,7 +1,13 @@
 # Changelog
 
-Notable changes to `@wirecat/tg-cli` (`@leemour/tg-cli` up to 0.42.0). One section per version, newest first; versions follow
+Notable changes to `@wirecat/tg-cli`. One section per version, newest first; versions follow
 [semantic versioning](https://semver.org), so before `1.0.0` the command interface may still change.
+
+## 0.46.1 — 11.10.2026
+
+### Fixed
+
+- Package references, documentation and fixtures use the WireCat namespace throughout.
 
 ## 0.46.0 — 11.10.2026
 
@@ -76,9 +82,8 @@ Notable changes to `@wirecat/tg-cli` (`@leemour/tg-cli` up to 0.42.0). One secti
 
 ### Changed — may break scripts
 
-- **The package is now `@wirecat/tg-cli`, and the repository is `WireCatLabs/tg-cli`.** Install with
-  `npm install -g @wirecat/tg-cli`; the `tg` command is the same. Uninstall `@leemour/tg-cli` first — both
-  packages provide `tg`. `@leemour/tg-cli` gets no new versions.
+- **The package is `@wirecat/tg-cli` and its repository belongs to WireCatLabs.** Use this package for installations and updates.
+
 
 - Local transcription accepts complete mono or stereo Ogg Opus recordings up to 10 minutes.
   Split longer recordings first. PDF text extraction supports at most 20 pages and 30 seconds.
@@ -916,7 +921,7 @@ Notable changes to `@wirecat/tg-cli` (`@leemour/tg-cli` up to 0.42.0). One secti
   `completeness` (per chat: held in full or not) and `wordsReady`. A query of one or two letters is
   searched instead of refused.
 - **tg needs Node 22.16 or newer** (or Bun, as before). When a Linux Node uses a system SQLite too old
-  for the message store, `tg` restarts itself on its own SQLite from `@leemour/cli-messaging-sqlite`,
+  for the message store, `tg` restarts itself on its own SQLite from `@wirecat/cli-messaging-sqlite`,
   before it reads or sends anything. Official Node and Bun builds notice nothing.
 
 ### Fixed
@@ -1212,7 +1217,7 @@ apply where they count, and `tg sends list` records it without the text.
 
 - **The shared message store moves to version 6** (cli-messaging 0.49.0). The first `tg` run upgrades
   `messages.db`; a `max` older than the one released the same day then refuses it and asks to be
-  upgraded — `npm install -g @leemour/max-cli@latest`. Nothing in `tg`'s own commands changes.
+  upgraded — `npm install -g @wirecat/max-cli@latest`. Nothing in `tg`'s own commands changes.
 
 ## 0.12.0 — 30.09.2026
 
