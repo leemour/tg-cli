@@ -16,7 +16,7 @@ Notable changes to `@wirecat/tg-cli`. One section per version, newest first; ver
 - **`tg store fetch --all` waits out a short FLOOD_WAIT on the chat list** (up to 5 minutes, as message pages
   already did) instead of failing at once with `rate_limited`; a 21 s wait ended every fetch of an empty store.
   Shipped in 0.46.2, not listed there.
-- On `@wirecat/cli-messaging` 0.230.0.
+- On `@wirecat/cli-messaging` 0.231.0.
 
 ## 0.46.2 — 11.10.2026
 
