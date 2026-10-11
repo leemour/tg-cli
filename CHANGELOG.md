@@ -3,30 +3,41 @@
 Notable changes to `@wirecat/tg-cli`. One section per version, newest first; versions follow
 [semantic versioning](https://semver.org), so before `1.0.0` the command interface may still change.
 
-## Unreleased
-
-### Fixed
-
-- Paging through the chats (`store fetch --all` lists them 100 at a time) reads each dialog from Telegram once.
-  Each page used to walk every dialog from the top again, so about 1,400 chats cost over 100 requests back to back
-  instead of about 15.
-- `chats members list --all` waits 1 s between pages of 200 members. It used to ask for up to 50 pages back
-  to back, although the limits page said it was paced.
-
 ## 0.46.3 — 11.10.2026
+
+### Changed — may break scripts
+
+- **Joining a chat and importing contacts count toward `sendsPerHour`.** A join counts as one, an import as one per
+  number; `tg contacts import` sends 10 numbers a request. When the limit stops an import part way, the error says
+  how many numbers went and that importing again is safe.
 
 ### What's new
 
 - **`tg bot watch` prints and keeps an update once**, even when Telegram delivers it again after a restart: each
   update is recorded by its `update_id` and skipped once handled. With `--events --jsonl`, each line carries
   `update: { id, kind }`.
+- `tg search all --backend archive|server|both` and `--server-time`, as on `search messages`; they apply to messages
+  only, mail and notes are always searched locally. The default is `both`.
+- `tg search mail --account <address>` searches one mailbox; without it, every mailbox. Mail is also searched by
+  recipient, folder and subject (`to:`, `cc:`, `bcc:`, `mailbox:`, `subject:`), and attachments by meaning.
 
 ### Fixed
 
 - **`tg store fetch --all` waits out a short FLOOD_WAIT on the chat list** (up to 5 minutes, as message pages
   already did) instead of failing at once with `rate_limited`; a 21 s wait ended every fetch of an empty store.
   Shipped in 0.46.2, not listed there.
-- On `@wirecat/cli-messaging` 0.231.0.
+- Paging through the chats (`store fetch --all` lists them 100 at a time) reads each dialog from Telegram once.
+  Each page used to walk every dialog from the top again, so about 1,400 chats cost over 100 requests back to back
+  instead of about 15.
+- `chats members list --all` waits 1 s between pages of 200 members. It used to ask for up to 50 pages back
+  to back, although the limits page said it was paced.
+
+### Security
+
+- **Search no longer answers another account's messages.** `search messages --backend server` with `--source all`
+  or `in:all` could return another account's message with the same chat and message ids, and a chat id without its
+  account matched that chat in every account; both are fixed.
+- On `@wirecat/cli-messaging` 0.233.0.
 
 ## 0.46.2 — 11.10.2026
 
