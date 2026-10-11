@@ -386,6 +386,7 @@ function fakePoll({
     isQuiz: false,
     isPublic: true,
     voters: 5,
+    results: { totalVoters: 5 },
   }
 }
 
@@ -2371,7 +2372,7 @@ describe("deleting", () => {
 })
 
 describe("polls", () => {
-  it("**names each answer by its own bytes**, and counts voters only once they are known", async () => {
+  it("**names each answer by its own bytes**, and counts each answer's voters only once they are known", async () => {
     const { adapter, client } = await open()
     client.found = { ...message(3), media: fakePoll({}) }
 
@@ -2385,10 +2386,26 @@ describe("polls", () => {
       question: "Friday?",
       anonymous: false,
       closed: false,
-      voters: null,
+      voters: 5,
       quiz: false,
       revote: true,
       creator: true,
+    })
+  })
+
+  it("carries each poll's question and total in a history page, so a channel reads without `polls show`", async () => {
+    const { adapter, client } = await open()
+    client.history = [{ ...message(3), media: fakePoll({}) }]
+
+    const [item] = (await adapter.history("-100500", { limit: 1 })).items
+
+    expect(item?.providerMetadata?.poll).toEqual({
+      question: "Friday?",
+      voters: 5,
+      answers: [
+        { text: "yes", voters: null },
+        { text: "no", voters: null },
+      ],
     })
   })
 

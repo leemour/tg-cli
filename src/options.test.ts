@@ -318,7 +318,7 @@ describe("messages", () => {
     let asked: unknown
     const adapter = scripted({
       history: async (_chat, window) => {
-        asked = window
+        asked ??= window
         return { items: [message("39")], hasMore: true }
       },
     })

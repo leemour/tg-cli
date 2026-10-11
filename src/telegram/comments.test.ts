@@ -57,4 +57,15 @@ describe("a post's comments", () => {
       expect.objectContaining({ _: "messages.getReplies", msgId: 42, offsetId: 6, limit: 3 }),
     )
   })
+
+  it("asks for at most Telegram's 100, and reads a full page of 100 as more to come", async () => {
+    const full = Array.from({ length: 100 }, (_, i) => reply(200 - i))
+    const { fake, call } = client({ _: "messages.channelMessages", messages: full, chats: [], users: [] })
+
+    const page = await commentsOf(fake, -1000000000001, 42, { limit: 500 })
+
+    expect(page.items).toHaveLength(100)
+    expect(page.hasMore).toBe(true)
+    expect(call).toHaveBeenCalledWith(expect.objectContaining({ limit: 100 }))
+  })
 })
