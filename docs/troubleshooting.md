@@ -6,14 +6,14 @@ command.
 
 A few words this page uses:
 
-- The **exit code** is the number a command returns when it ends: `0` means it worked, any other
+- The **exit code** is the number a command returns when it ends: `0` means the command completed; for batch reads check completeness, any other
   number names the kind of failure. Scripts and AI agents read it; the table below maps each one to
   its section.
 - **`tg doctor`** checks the installation without connecting to Telegram. Run it first.
 - **`--trace`** shows each request to Telegram as it happens, without message text
   ([diagnostics](diagnostics.md)).
 
-In `--json` output every error is one line on stderr, `{"error":{"code":"…","message":"…"}}`, and the
+In `--json` output an error that ends the command is one line on stderr, `{"error":{"code":"…","message":"…"}}`, and the
 exit code says the same as the `code`. Every code is also in the
 [exit code reference](commands.md#exit-codes).
 
