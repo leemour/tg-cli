@@ -4,6 +4,8 @@ import type { Discussion } from "@wirecat/cli-messaging"
 
 type Client = Pick<TelegramClient, "call" | "resolvePeer">
 
+const PAGE = 100
+
 const noComments = () =>
   new CliError(
     "not_found",
@@ -30,7 +32,10 @@ export const discussionOf = async (client: Client, channelId: number, postId: nu
   }
 }
 
-/** Newest first from Telegram, one more than asked to know whether older ones remain; answered oldest first. */
+/**
+ * Newest first from Telegram, one more than asked to know whether older ones remain; answered oldest first.
+ * Telegram returns at most 100, so at a limit of 100 or more a full page is the only sign that more remain.
+ */
 export const commentsOf = async (
   client: Client,
   channelId: number,
@@ -44,7 +49,7 @@ export const commentsOf = async (
     offsetId: before ?? 0,
     offsetDate: 0,
     addOffset: 0,
-    limit: limit + 1,
+    limit: Math.min(limit + 1, PAGE),
     maxId: 0,
     minId: 0,
     hash: Long.ZERO,
@@ -54,5 +59,5 @@ export const commentsOf = async (
   const found = answer.messages
     .filter((one): one is tl.RawMessage => one._ === "message")
     .map((one) => new TgMessage(one, peers))
-  return { items: found.slice(0, limit).reverse(), hasMore: found.length > limit }
+  return { items: found.slice(0, limit).reverse(), hasMore: found.length > limit || found.length === PAGE }
 }

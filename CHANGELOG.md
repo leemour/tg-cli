@@ -12,6 +12,9 @@ Notable changes to `@wirecat/tg-cli`. One section per version, newest first; ver
 
 ### Fixed
 
+- **`messages comments --limit 100` (or more) says when older comments remain.** It asked Telegram for one comment
+  more than the limit to find out, but Telegram returns at most 100, so a thread of 1,600 comments answered 100 with
+  `hasMore: false`. It now asks for at most 100 and reads a full page as more to come.
 - **`polls show` gives a poll's total votes before you vote.** Telegram sends the total either way; only each
   answer's count waits for your vote. The total used to be `null` too.
 
