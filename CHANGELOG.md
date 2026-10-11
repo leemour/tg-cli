@@ -3,6 +3,20 @@
 Notable changes to `@wirecat/tg-cli`. One section per version, newest first; versions follow
 [semantic versioning](https://semver.org), so before `1.0.0` the command interface may still change.
 
+## Unreleased
+
+### What's new
+
+- **`tg bot watch` prints and keeps an update once**, even when Telegram delivers it again after a restart: each
+  update is recorded by its `update_id` and skipped once handled. With `--events --jsonl`, each line carries
+  `update: { id, kind }`.
+
+### Fixed
+
+- **`tg bot store fetch` with nothing to start from exits 2 again** with "give --from <message link>", instead of 0
+  with `fetched: 0` and an `issue`. A wait Telegram asks for on the first page still ends as a partial result.
+  From `@wirecat/cli-messaging` 0.226.0, which this release moves to.
+
 ## 0.46.1 — 11.10.2026
 
 ### Fixed

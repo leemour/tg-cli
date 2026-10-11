@@ -248,8 +248,18 @@ const inChat = ({ status, is_member }: TgChatMember) =>
 
 const personOf = (user: User) => ({ id: String(user.id), name: nameOf(user), username: user.username ?? null })
 
-/** One update in the shared words; a kind not decoded here is `other`, under Telegram's own name. */
-export const toEvent = (update: TgUpdate, selfId: string | undefined): BotEvent => {
+const kindOf = (update: TgUpdate) => Object.keys(update).find((key) => key !== "update_id") ?? "unknown"
+
+/**
+ * One update in the shared words, named by its `update_id` so `bot watch` skips a redelivery; a kind not
+ * decoded here is `other`, under Telegram's own name.
+ */
+export const toEvent = (update: TgUpdate, selfId: string | undefined): BotEvent => ({
+  ...decoded(update, selfId),
+  update: { id: String(update.update_id), kind: kindOf(update) },
+})
+
+const decoded = (update: TgUpdate, selfId: string | undefined): BotEvent => {
   const created = update.message ?? update.channel_post
   if (created) return { event: "message", message: { ...toMessage(created, selfId), chatTitle: null } }
   const edited = update.edited_message ?? update.edited_channel_post
@@ -280,7 +290,7 @@ export const toEvent = (update: TgUpdate, selfId: string | undefined): BotEvent 
       }
     }
   }
-  const kind = Object.keys(update).find((key) => key !== "update_id") ?? "unknown"
+  const kind = kindOf(update)
   const chat = (update[kind] as { chat?: TgChat } | undefined)?.chat
   return { event: "other", type: kind, chatId: chat ? String(chat.id) : null }
 }
