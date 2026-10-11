@@ -168,6 +168,8 @@ interface DialogWalk {
 
 /** Telegram's own cap on a group's member list. */
 const MEMBERS_MAX = 10_000
+/** Up to 50 pages of a big group back to back is the kind of burst Telegram answers with FLOOD_WAIT. */
+const MEMBER_PAGE_PAUSE_MS = 1000
 /** Pages of 100 that `chats events` reads at most; the rest is `more`. */
 const EVENT_PAGES = 10
 
@@ -1483,8 +1485,8 @@ export class TelegramAdapter {
   }
 
   /**
-   * A page of a group's members, 200 a request. Telegram gives at most `MEMBERS_MAX` of a big group,
-   * and a group that hides its list answers only its admins or refuses.
+   * A page of a group's members, 200 a request, a second apart. Telegram gives at most `MEMBERS_MAX` of a big
+   * group, and a group that hides its list answers only its admins or refuses.
    */
   members(
     reference: string,
@@ -1497,6 +1499,7 @@ export class TelegramAdapter {
       const found: GroupMember[] = []
       let total: number | null = null
       while (found.length < wanted) {
+        if (found.length > 0) await new Promise((resolve) => setTimeout(resolve, MEMBER_PAGE_PAUSE_MS))
         const size = Math.min(200, wanted - found.length)
         const page = await this.#client.getChatMembers(peer, { offset: offset + found.length, limit: size })
         total = page.total

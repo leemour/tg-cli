@@ -911,6 +911,31 @@ describe("reading", () => {
     expect(asked).toEqual([{ offset: 2, limit: 2 }])
   })
 
+  it("pauses a second between pages of one member list instead of asking for them back to back", async () => {
+    const { adapter, client } = await open()
+    client.peer = group(-100500, "Test group")
+    const everyone = Array.from({ length: 450 }, (_, index) => ({ user: user(index + 2, "Alice Example") }))
+    client.getChatMembers = async (...args: unknown[]) => {
+      client.calls.push({ method: "getChatMembers", args })
+      const { offset, limit } = args[1] as { offset: number; limit: number }
+      return Object.assign(everyone.slice(offset, offset + limit), { total: everyone.length })
+    }
+    const pages = () => client.calls.filter((call) => call.method === "getChatMembers").length
+    vi.useFakeTimers()
+    try {
+      const reading = adapter.members("-100500", { offset: 0 })
+      await vi.advanceTimersByTimeAsync(999)
+      expect(pages()).toBe(1)
+      await vi.advanceTimersByTimeAsync(1)
+      expect(pages()).toBe(2)
+      await vi.advanceTimersByTimeAsync(1000)
+      expect((await reading).items).toHaveLength(450)
+      expect(pages()).toBe(3)
+    } finally {
+      vi.useRealTimers()
+    }
+  })
+
   it("counts a supergroup by its member list, which the chat and its full info can lag behind", async () => {
     const { adapter, client } = await open()
     client.peer = { ...group(-100500, "Test group"), membersCount: 1, raw: { _: "channel" } }
