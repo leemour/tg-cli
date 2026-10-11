@@ -594,6 +594,20 @@ describe("reading", () => {
     expect(client.calls.filter((call) => call.method === "iterDialogs")).toHaveLength(3)
   })
 
+  it("walks again when the next page comes more than a minute later", async () => {
+    const { adapter, client } = await open()
+    client.dialogs = [1, 2, 3, 4].map((id) => dialog(group(-id, `chat ${id}`)))
+    vi.useFakeTimers()
+    try {
+      await adapter.chats({ limit: 2, offset: 0 })
+      vi.advanceTimersByTime(61_000)
+      expect((await adapter.chats({ limit: 2, offset: 2 })).items.map((chat) => chat.id)).toEqual(["-3", "-4"])
+      expect(client.calls.filter((call) => call.method === "iterDialogs")).toHaveLength(2)
+    } finally {
+      vi.useRealTimers()
+    }
+  })
+
   it("lists a pinned chat once when Telegram's pages bring it again, and finds it by title", async () => {
     const { adapter, client } = await open()
     const pinned = dialog(group(-1, "Valencia expats"))

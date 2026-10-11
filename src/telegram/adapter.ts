@@ -164,7 +164,11 @@ interface DialogWalk {
   /** Read past the last page, to tell whether there is more; the next page starts with them. */
   held: Chat[]
   at: number
+  until: number
 }
+
+/** Pages of one listing come about a second apart; a page asked for later than this reads fresh dialogs. */
+const DIALOG_WALK_KEPT_MS = 60_000
 
 /** Telegram's own cap on a group's member list. */
 const MEMBERS_MAX = 10_000
@@ -191,7 +195,7 @@ export class TelegramAdapter {
   readonly #sessionPath: string
   readonly #login: string | undefined
   readonly #proxyFailed: Promise<never> | undefined
-  /** Where the last page of `chats` stopped; any other offset, or a failure, starts a new walk. */
+  /** Where the last page of `chats` stopped; any other offset, a failure or a minute's gap starts a new walk. */
   #walk: DialogWalk | undefined
 
   /** Async because the runtime's SQLite module is imported on demand (cli-messaging `openCache`). */
@@ -382,13 +386,20 @@ export class TelegramAdapter {
       const resumed = this.#walk
       this.#walk = undefined
       const walk: DialogWalk =
-        resumed && offset > 0 && resumed.at === offset
+        resumed && offset > 0 && resumed.at === offset && Date.now() < resumed.until
           ? resumed
-          : { dialogs: this.#client.iterDialogs({ archived: "keep" }), seen: new Set<string>(), held: [], at: 0 }
+          : {
+              dialogs: this.#client.iterDialogs({ archived: "keep" }),
+              seen: new Set<string>(),
+              held: [],
+              at: 0,
+              until: 0,
+            }
       const pulled = await this.#pull(walk, offset - walk.at + limit + 1)
       const items = pulled.slice(offset - walk.at, offset - walk.at + limit)
       walk.held = pulled.slice(offset - walk.at + limit)
       walk.at = offset + items.length
+      walk.until = Date.now() + DIALOG_WALK_KEPT_MS
       this.#walk = walk
       return { items, hasMore: walk.held.length > 0 }
     })
