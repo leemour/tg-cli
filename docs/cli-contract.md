@@ -61,7 +61,7 @@ An unknown command, option or a missing required argument exits with code 2. `tg
 gives the complete table of exit codes. `--quiet` hides ordinary diagnostics but keeps errors.
 Machine output has no color and no animation; `NO_COLOR` turns off color in text output too.
 
-Partial reads and downloads can return JSON with exit code `0`: inspect `complete` and `batch` or `issue`. Partial download JSONL adds `batch_summary`; completed work stays saved. Errors include `actions` with recovery steps, settings and waits.
+Partial reads and downloads can return JSON with exit code `0`: inspect `complete` and `batch` or `issue`. A fetch that fails before its first page, for a reason no retry fixes (such as a missing `--from`), exits with that error's code instead. Partial download JSONL adds `batch_summary`; completed work stays saved. Errors include `actions` with recovery steps, settings and waits.
 
 ## Running without questions, and limits
 
