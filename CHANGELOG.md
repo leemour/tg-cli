@@ -14,7 +14,15 @@ Notable changes to `@wirecat/tg-cli` (`@leemour/tg-cli` up to 0.42.0). One secti
 ### What's new
 
 - `tg store reset` for a store this build cannot migrate: it backs the store up beside itself, deletes it and
-  starts an empty one. It asks first; `--yes` skips the question and `--no-backup` skips the copy. From `@wirecat/cli-messaging` 0.221.0.
+  starts an empty one. It asks first; `--yes` skips the question and `--no-backup` skips the copy.
+- `tg search all --meetings [provider:account]` also searches one meeting account's transcripts, chat and
+  summaries; `--max-meetings <n|all>` sets how many meetings it looks through (100 by default).
+
+### Security
+
+- **The old `messages.db` is deleted** when the store opens at its default path: the unencrypted file used
+  before `wirecat.db`, with its `-wal` and `-shm`. One line on stderr names it. It is kept when
+  `MESSAGING_STORE` is set, and while another process still has it open. From `@wirecat/cli-messaging` 0.222.0.
 
 ## 0.45.0 — 10.10.2026
 
